@@ -7,10 +7,6 @@
       :showOneChild="true"
       @itemClick="onItemClick"
     />
-    <div id="nav">
-      <router-link to="/">Home</router-link>|
-      <router-link to="/about">About</router-link>
-    </div>
     <router-view/>
   </div>
 </template>
@@ -25,7 +21,7 @@ export default {
       menu: [
         {
           header: true,
-          title: "Main Navigation"
+          title: "Navigation"
         },
         {
           href: "/",
@@ -33,8 +29,7 @@ export default {
           icon: "fas fa-chart-line"
         },
         {
-          // href: "/connection",
-          href: "/about",
+          href: "/connection",
           title: "Connection",
           icon: "fas fa-database",
           child: [
@@ -56,12 +51,12 @@ export default {
           icon: "fas fa-project-diagram",
           child: [
             {
-              href: "/connection/new",
+              href: "/schema/new",
               title: "New Schema",
               icon: "fas fa-plus"
             },
             {
-              href: "/connection/all",
+              href: "/schema/all",
               title: "All Schemas",
               icon: "fas fa-sitemap"
             }

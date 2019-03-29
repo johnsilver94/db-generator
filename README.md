@@ -1,4 +1,4 @@
-# electron-vue-example
+# Database Generator
 
 ## Project setup
 

@@ -1,4 +1,6 @@
+/* eslint-disable func-names */
 /* eslint-disable linebreak-style */
+
 import Vue from 'vue';
 import VueSidebarMenu from 'vue-sidebar-menu';
 import App from './App.vue';
