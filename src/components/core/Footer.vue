@@ -1,0 +1,36 @@
+<template>
+  <v-footer id="core-footer" absolute height="82">
+    <div class="footer-items">
+      <span v-for="link in links" :key="link.name">
+        <a :href="link.Link" class="tertiary--text footer-links">{{ link.name }}</a>
+      </span>
+    </div>
+    <v-spacer/>
+    <span class="font-weight-light copyright">
+      &copy;
+      {{ (new Date()).getFullYear() }}
+    </span>
+  </v-footer>
+</template>
+
+<script>
+export default {
+  data: () => ({
+    links: [
+      { name: "Dashboard", Link: "/dashboard" },
+      {
+        name: "Documentation",
+        Link:
+          "https://github.com/silverfang94/db-generator/blob/master/README.md"
+      },
+      { name: "Github", Link: "https://github.com/silverfang94/db-generator" }
+    ]
+  })
+};
+</script>
+
+<style>
+#core-footer {
+  z-index: 0;
+}
+</style>
