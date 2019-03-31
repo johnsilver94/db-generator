@@ -226,17 +226,16 @@ export default {
             if (response.status == 200) {
               notification.type = "success";
               notification.text = `connection "${this.currentConnection.name.toUpperCase()}" succeed`;
-              console.log(notification);
+
               this.snack(notification.type, notification.text);
               this.notifications.push(notification);
               this.setNotifications(this.notifications);
             }
           })
           .catch(e => {
-            console.log(e);
             notification.type = "error";
-            notification.text = `connection "${this.currentConnection.name.toUpperCase()}" was failed`;
-            console.log(notification);
+            notification.text = `connection "${this.currentConnection.name.toUpperCase()}" was failed with error ${e}`;
+
             this.snack(notification.type, notification.text);
             this.notifications.push(notification);
             this.setNotifications(this.notifications);

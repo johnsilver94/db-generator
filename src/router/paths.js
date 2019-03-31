@@ -8,6 +8,14 @@ export default [
     view: 'Connection'
   },
   {
+    path: '/schema',
+    view: 'Schema'
+  },
+  {
+    path: '/generate',
+    view: 'Generate'
+  },
+  {
     path: '/notifications',
     view: 'Notifications'
   }
