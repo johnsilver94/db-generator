@@ -5,5 +5,5 @@ export default {
   setImage: set('image'),
   setColor: set('color'),
   toggleDrawer: toggle('drawer'),
-  setNotifications: set('notifications')
+  setDefaultSchemaIndex: set('defaultSchemaIndex')
 };

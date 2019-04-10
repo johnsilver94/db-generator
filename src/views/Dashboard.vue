@@ -1,223 +1,307 @@
 <template>
-  <v-app id="inspire">
-    <div>
-      <v-toolbar flat color="white">
-        <v-toolbar-title>My CRUD</v-toolbar-title>
-        <v-divider class="mx-2" inset vertical></v-divider>
-        <v-spacer></v-spacer>
-        <v-dialog v-model="dialog" max-width="500px">
-          <template v-slot:activator="{ on }">
-            <v-btn color="primary" dark class="mb-2" v-on="on">New Item</v-btn>
+  <v-container fill-height fluid grid-list-xl>
+    <v-layout wrap>
+      <v-flex md12 sm12 lg4>
+        <material-chart-card
+          :data="statistics.schemasBar.data"
+          :options="statistics.schemasBar.options"
+          color="info"
+          type="Bar"
+        >
+          <h4 class="title font-weight-light">Schema tables and fields</h4>
+          <p class="category d-inline-flex font-weight-light">Table numbers by schema</p>
+
+          <template slot="actions">
+            <v-icon class="mr-2" small>mdi-clock-outline</v-icon>
+            <span class="caption grey--text font-weight-light">updated 4 minutes ago</span>
           </template>
-          <v-card>
-            <v-card-title>
-              <span class="headline">{{ formTitle }}</span>
-            </v-card-title>
+        </material-chart-card>
+      </v-flex>
+      <v-flex md12 sm12 lg4>
+        <material-chart-card
+          :data="statistics.connectionsPie.data"
+          :options="statistics.connectionsPie.options"
+          color="success"
+          type="Pie"
+        >
+          <h4 class="title font-weight-light">Connections by database</h4>
+          <p class="category d-inline-flex font-weight-light">Numbers of connections by database</p>
 
-            <v-card-text>
-              <v-container grid-list-md>
-                <v-layout wrap>
-                  <v-flex xs12 sm6 md4>
-                    <v-text-field v-model="editedItem.name" label="Dessert name"></v-text-field>
-                  </v-flex>
-                  <v-flex xs12 sm6 md4>
-                    <v-text-field v-model="editedItem.calories" label="Calories"></v-text-field>
-                  </v-flex>
-                  <v-flex xs12 sm6 md4>
-                    <v-text-field v-model="editedItem.fat" label="Fat (g)"></v-text-field>
-                  </v-flex>
-                  <v-flex xs12 sm6 md4>
-                    <v-text-field v-model="editedItem.carbs" label="Carbs (g)"></v-text-field>
-                  </v-flex>
-                  <v-flex xs12 sm6 md4>
-                    <v-text-field v-model="editedItem.protein" label="Protein (g)"></v-text-field>
-                  </v-flex>
-                </v-layout>
-              </v-container>
-            </v-card-text>
+          <template slot="actions">
+            <v-icon class="mr-2" small>mdi-clock-outline</v-icon>
+            <span class="caption grey--text font-weight-light">updated 4 minutes ago</span>
+          </template>
+        </material-chart-card>
+      </v-flex>
+      <v-flex md12 sm12 lg4>
+        <material-chart-card
+          :data="statistics.generatedHBar.data"
+          :options="statistics.generatedHBar.options"
+          color="warning"
+          type="Bar"
+        >
+          <h4 class="title font-weight-light">Generated rows</h4>
+          <p class="category d-inline-flex font-weight-light">Numbers of rows</p>
 
-            <v-card-actions>
-              <v-spacer></v-spacer>
-              <v-btn color="blue darken-1" flat @click="close">Cancel</v-btn>
-              <v-btn color="blue darken-1" flat @click="save">Save</v-btn>
-            </v-card-actions>
-          </v-card>
-        </v-dialog>
-      </v-toolbar>
-      <v-data-table :headers="headers" :items="desserts" class="elevation-1">
-        <template v-slot:items="props">
-          <td>{{ props.item.name }}</td>
-          <td class="text-xs-right">{{ props.item.calories }}</td>
-          <td class="text-xs-right">{{ props.item.fat }}</td>
-          <td class="text-xs-right">{{ props.item.carbs }}</td>
-          <td class="text-xs-right">{{ props.item.protein }}</td>
-          <td class="justify-center layout px-0">
-            <v-icon small class="mr-2" @click="editItem(props.item)">edit</v-icon>
-            <v-icon small @click="deleteItem(props.item)">delete</v-icon>
-          </td>
-        </template>
-        <template v-slot:no-data>
-          <v-btn color="primary" @click="initialize">Reset</v-btn>
-        </template>
-      </v-data-table>
-    </div>
-  </v-app>
+          <template slot="actions">
+            <v-icon class="mr-2" small>mdi-clock-outline</v-icon>
+            <span class="caption grey--text font-weight-light">updated 4 minutes ago</span>
+          </template>
+        </material-chart-card>
+      </v-flex>
+
+      <v-flex sm6 xs12 md6 lg3>
+        <material-stats-card
+          color="green"
+          icon="mdi-table-row"
+          title="Generated rows"
+          :value="statistics.generatedRows.value"
+          sub-icon="mdi-calendar"
+          sub-text="All time generated."
+        />
+      </v-flex>
+      <v-flex sm6 xs12 md6 lg3>
+        <material-stats-card
+          color="red"
+          icon="mdi-information-outline"
+          title="Errors"
+          :value="statistics.errors.value"
+          sub-icon="mdi-tag"
+          sub-text="Only sever warnings."
+        />
+      </v-flex>
+      <v-flex sm6 xs12 md6 lg3>
+        <material-stats-card
+          color="orange"
+          icon="mdi-table-column"
+          title="Fields per table"
+          :value="statistics.fieldsPerTable.value"
+          sub-icon="mdi-alert"
+          sub-text="Average value"
+        />
+      </v-flex>
+      <v-flex sm6 xs12 md6 lg3>
+        <material-stats-card
+          color="info"
+          icon="mdi-database"
+          title="Generated database"
+          :value="statistics.generatedDatabase.value"
+          sub-icon="mdi-update"
+          sub-text="Just Updated"
+        />
+      </v-flex>
+      <v-flex md12 lg12>
+        <material-card class="card-tabs" color="green">
+          <v-flex slot="header">
+            <v-tabs v-model="tabs" color="transparent" slider-color="white">
+              <span class="subheading font-weight-light mr-3" style="align-self: center">Tasks:</span>
+              <v-tab class="mr-3">
+                <v-icon class="mr-2">mdi-clipboard-outline</v-icon>Schemas
+              </v-tab>
+              <v-tab class="mr-3">
+                <v-icon class="mr-2">mdi-database</v-icon>Connections
+              </v-tab>
+            </v-tabs>
+          </v-flex>
+
+          <v-tabs-items v-model="tabs">
+            <v-tab-item>
+              <v-list-tile>
+                <v-list-tile-title>
+                  <i>Schema name</i>
+                </v-list-tile-title>
+                <v-list-tile-title>
+                  <i>Database</i>
+                </v-list-tile-title>
+                <v-list-tile-title>
+                  <i>Nr. of tables</i>
+                </v-list-tile-title>
+              </v-list-tile>
+              <v-list three-line v-for="(schema,index) in schemas" :item="schema" :key="index">
+                <v-list-tile>
+                  <v-list-tile-title>{{schema.name}}</v-list-tile-title>
+                  <v-list-tile-title>{{schema.type}}</v-list-tile-title>
+                  <v-list-tile-title>{{schema.tables.length}}</v-list-tile-title>
+                  <div class="d-flex">
+                    <v-tooltip top content-class="top">
+                      <v-btn
+                        slot="activator"
+                        class="v-btn--simple"
+                        color="success"
+                        @click="editSchema(index)"
+                        icon
+                      >
+                        <v-icon color="primary">mdi-pencil</v-icon>
+                      </v-btn>
+                      <span>Edit</span>
+                    </v-tooltip>
+                    <v-tooltip top content-class="top">
+                      <v-btn
+                        slot="activator"
+                        class="v-btn--simple"
+                        color="danger"
+                        @click="deleteSchema(index)"
+                        icon
+                      >
+                        <v-icon color="error">mdi-close</v-icon>
+                      </v-btn>
+                      <span>Close</span>
+                    </v-tooltip>
+                  </div>
+                </v-list-tile>
+                <v-divider/>
+              </v-list>
+            </v-tab-item>
+            <v-tab-item>
+              <v-list-tile>
+                <v-list-tile-title>
+                  <i>Connection name</i>
+                </v-list-tile-title>
+                <v-list-tile-title>
+                  <i>Client</i>
+                </v-list-tile-title>
+                <v-list-tile-title>
+                  <i>Database</i>
+                </v-list-tile-title>
+                <v-list-tile-title>
+                  <i>Connection String</i>
+                </v-list-tile-title>
+                <v-list-tile-title>
+                  <i>User</i>
+                </v-list-tile-title>
+              </v-list-tile>
+              <v-list
+                three-line
+                v-for="(connection,index) in connections"
+                :item="connection"
+                :key="index"
+              >
+                <v-list-tile>
+                  <v-list-tile-title>{{connection.name}}</v-list-tile-title>
+                  <v-list-tile-title>{{connection.client}}</v-list-tile-title>
+                  <v-list-tile-title>{{connection.database}}</v-list-tile-title>
+                  <v-list-tile-title>{{connection.connectString}}</v-list-tile-title>
+                  <v-list-tile-title>{{connection.user}}</v-list-tile-title>
+                  <div class="d-flex">
+                    <v-tooltip top content-class="top">
+                      <v-btn
+                        slot="activator"
+                        class="v-btn--simple"
+                        color="success"
+                        @click="editConnection(index)"
+                        icon
+                      >
+                        <v-icon color="primary">mdi-pencil</v-icon>
+                      </v-btn>
+                      <span>Edit</span>
+                    </v-tooltip>
+                    <v-tooltip top content-class="top">
+                      <v-btn
+                        slot="activator"
+                        class="v-btn--simple"
+                        color="danger"
+                        @click="deleteConnection(index)"
+                        icon
+                      >
+                        <v-icon color="error">mdi-close</v-icon>
+                      </v-btn>
+                      <span>Close</span>
+                    </v-tooltip>
+                  </div>
+                </v-list-tile>
+                <v-divider/>
+              </v-list>
+            </v-tab-item>
+          </v-tabs-items>
+        </material-card>
+      </v-flex>
+    </v-layout>
+    <v-snackbar
+      v-model="notificationbar"
+      :timeout="timeout"
+      :color="color"
+      :bottom="bottom"
+      :right="right"
+      dark
+    >
+      <v-icon color="white" class="mr-3">mdi-bell-plus</v-icon>
+      <div>{{text}}</div>
+      <v-icon size="16" @click="notificationbar = false">mdi-close-circle</v-icon>
+    </v-snackbar>
+  </v-container>
 </template>
 
 <script>
+import { mapGetters, mapMutations } from "vuex";
+
 export default {
-  data: () => ({
-    dialog: false,
-    headers: [
-      {
-        text: "Dessert (100g serving)",
-        align: "left",
-        sortable: false,
-        value: "name"
-      },
-      { text: "Calories", value: "calories" },
-      { text: "Fat (g)", value: "fat" },
-      { text: "Carbs (g)", value: "carbs" },
-      { text: "Protein (g)", value: "protein" },
-      { text: "Actions", value: "name", sortable: false }
-    ],
-    desserts: [],
-    editedIndex: -1,
-    editedItem: {
-      name: "",
-      calories: 0,
-      fat: 0,
-      carbs: 0,
-      protein: 0
-    },
-    defaultItem: {
-      name: "",
-      calories: 0,
-      fat: 0,
-      carbs: 0,
-      protein: 0
-    }
-  }),
-
+  data() {
+    return {
+      //Tabs form
+      tabs: 0,
+      tabsDescription: [
+        { name: "Schemas", img: "mdi-clipboard-outline" },
+        { name: "Connections", img: "mdi-database" }
+      ],
+      //Notification
+      color: "info",
+      text: "",
+      bottom: true,
+      right: true,
+      notificationbar: false,
+      timeout: 6000
+    };
+  },
   computed: {
-    formTitle() {
-      return this.editedIndex === -1 ? "New Item" : "Edit Item";
-    }
+    ...mapGetters("app", [
+      "statistics",
+      "schemas",
+      "connections",
+      "notifications"
+    ])
   },
-
-  watch: {
-    dialog(val) {
-      val || this.close();
-    }
-  },
-
-  created() {
-    this.initialize();
-  },
-
   methods: {
-    initialize() {
-      this.desserts = [
-        {
-          name: "Frozen Yogurt",
-          calories: 159,
-          fat: 6.0,
-          carbs: 24,
-          protein: 4.0
-        },
-        {
-          name: "Ice cream sandwich",
-          calories: 237,
-          fat: 9.0,
-          carbs: 37,
-          protein: 4.3
-        },
-        {
-          name: "Eclair",
-          calories: 262,
-          fat: 16.0,
-          carbs: 23,
-          protein: 6.0
-        },
-        {
-          name: "Cupcake",
-          calories: 305,
-          fat: 3.7,
-          carbs: 67,
-          protein: 4.3
-        },
-        {
-          name: "Gingerbread",
-          calories: 356,
-          fat: 16.0,
-          carbs: 49,
-          protein: 3.9
-        },
-        {
-          name: "Jelly bean",
-          calories: 375,
-          fat: 0.0,
-          carbs: 94,
-          protein: 0.0
-        },
-        {
-          name: "Lollipop",
-          calories: 392,
-          fat: 0.2,
-          carbs: 98,
-          protein: 0
-        },
-        {
-          name: "Honeycomb",
-          calories: 408,
-          fat: 3.2,
-          carbs: 87,
-          protein: 6.5
-        },
-        {
-          name: "Donut",
-          calories: 452,
-          fat: 25.0,
-          carbs: 51,
-          protein: 4.9
-        },
-        {
-          name: "KitKat",
-          calories: 518,
-          fat: 26.0,
-          carbs: 65,
-          protein: 7
-        }
-      ];
-    },
+    ...mapMutations("app", ["setDefaultSchemaIndex"]),
+    deleteConnection(index) {
+      if (confirm("Are you sure you want to delete this Connection?")) {
+        const notification = {
+          text: `connection "${this.connections[
+            index
+          ].name.toUpperCase()}" was removed`,
+          type: "warning"
+        };
 
-    editItem(item) {
-      this.editedIndex = this.desserts.indexOf(item);
-      this.editedItem = Object.assign({}, item);
-      this.dialog = true;
-    },
-
-    deleteItem(item) {
-      const index = this.desserts.indexOf(item);
-      confirm("Are you sure you want to delete this item?") &&
-        this.desserts.splice(index, 1);
-    },
-
-    close() {
-      this.dialog = false;
-      setTimeout(() => {
-        this.editedItem = Object.assign({}, this.defaultItem);
-        this.editedIndex = -1;
-      }, 300);
-    },
-
-    save() {
-      if (this.editedIndex > -1) {
-        Object.assign(this.desserts[this.editedIndex], this.editedItem);
-      } else {
-        this.desserts.push(this.editedItem);
+        this.showNotification(notification);
+        this.connections.splice(index, 1);
       }
-      this.close();
+    },
+    editConnection(index) {
+      this.$router.push("/connection");
+    },
+    deleteSchema(index) {
+      if (confirm("Are you sure you want to delete this Schema?")) {
+        const notification = {
+          text: `schema "${this.schemas[
+            index
+          ].name.toUpperCase()}" was removed`,
+          type: "warning"
+        };
+
+        this.showNotification(notification);
+        this.schemas.splice(index, 1);
+      }
+    },
+    editSchema(index) {
+      this.setDefaultSchemaIndex(index);
+
+      this.$router.push("/schema");
+    },
+    showNotification(notification) {
+      this.color = notification.type;
+      this.text = notification.text;
+
+      this.notifications.push(notification);
+      this.notificationbar = true;
     }
   }
 };

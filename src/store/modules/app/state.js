@@ -2,30 +2,6 @@ export default {
   drawer: null,
   color: 'success',
   image: './img/img3.png',
-  oracleDataTypes: [
-    'VARCHAR2(size [BYTE | CHAR])',
-    'NVARCHAR2(size)',
-    'NUMBER [ (p [, s]) ]',
-    'FLOAT [(p)]',
-    'LONG',
-    'DATE',
-    'BINARY_FLOAT',
-    'BINARY_DOUBLE',
-    'TIMESTAMP [(fractional_seconds_precision)]',
-    'TIMESTAMP [(fractional_seconds_precision)] WITH TIME ZONE',
-    'INTERVAL YEAR [(year_precision)] TO MONTH',
-    'INTERVAL DAY [(day_precision)] TO SECOND [(fractional_seconds_precision)]',
-    'RAW(size)',
-    'LONG RAW',
-    'ROWID',
-    'UROWID [(size)]',
-    'CHAR [(size [BYTE | CHAR])]',
-    'NCHAR[(size)',
-    'CLOB',
-    'NCLOB',
-    'BLOB',
-    'BFILE'
-  ],
   oracleDataTypesFull: [
     {
       name: 'VARCHAR2(size [BYTE | CHAR])',
@@ -158,7 +134,11 @@ export default {
       size: 'Maximum size is 4 gigabytes.'
     }
   ],
-  databases: ['All', 'Oracle', 'PostgreSQL'],
+
+  databases: [
+    { name: 'Oracle', client: 'oracledb' },
+    { name: 'PostgreSQL', client: 'pg' }
+  ],
   connections: [
     {
       name: 'Oracle DB connection',
@@ -176,6 +156,14 @@ export default {
       user: 'postgres',
       password: 'postgres',
       database: 'PostgreSQL'
+    },
+    {
+      name: 'Oracle DB non-container',
+      client: 'oracledb',
+      user: 'test_user',
+      password: 'test_user',
+      connectString: 'localhost/john',
+      database: 'Oracle'
     }
   ],
   notifications: [
@@ -185,67 +173,308 @@ export default {
     // { type: 'error', text: 'Another Notification' },
     // { type: 'warning', text: 'Another One' }
   ],
-  schema: {
-    name: 'First Schema',
-    type: 'Oracle',
-    tables: [
-      {
-        name: 'PurchTable',
-        fromField: '',
-        toTable: '',
-        toField: '',
-        fields: [
-          {
-            name: 'purchId',
-            dbDataType: 'NUMBER(19 , 0)',
-            generateType: 'id'
-          },
-          {
-            name: 'custName',
-            dbDataType: 'VARCHAR2(255 CHAR)',
-            generateType: ''
-          },
-          { name: 'purchDate', dbDataType: 'TIMESTAMP(7)', generateType: '' },
-          {
-            name: 'custType',
-            dbDataType: 'VARCHAR2(255 CHAR)',
-            generateType: ''
-          }
-        ]
+  defaultSchemaIndex: 0,
+  schemas: [
+    {
+      name: 'First Schema',
+      type: 'Oracle',
+      multiplicator: 1,
+      connection: {},
+      // connection: {
+      //   name: 'Oracle DB connection',
+      //   client: 'oracledb',
+      //   connectString: 'localhost/orcl',
+      //   user: 'C##john',
+      //   password: 'john',
+      //   database: 'Oracle'
+      // },
+      tables: [
+        {
+          name: 'PurchTable',
+          multiplicator: 3,
+          refs: ['Customers'],
+          fields: [
+            {
+              pk: true,
+              name: 'purchId',
+              dbDataType: 'NUMBER(19 , 0)',
+              generateType: 'pk'
+            },
+            {
+              fk: true,
+              name: 'custId',
+              dbDataType: 'NUMBER(19 , 0)',
+              generateType: 'fk',
+              refTable: 'Customers',
+              refField: 'custId'
+            },
+            {
+              name: 'custName',
+              dbDataType: 'VARCHAR2(255 CHAR)',
+              generateType: ''
+            },
+            {
+              name: 'purchDate',
+              dbDataType: 'TIMESTAMP(7)',
+              generateType: ''
+            },
+            {
+              name: 'custType',
+              dbDataType: 'VARCHAR2(255 CHAR)',
+              generateType: ''
+            }
+          ]
+        },
+        {
+          name: 'PurchLine',
+          multiplicator: 5,
+          refs: ['PurchTable', 'Product'],
+          fields: [
+            {
+              pk: true,
+              name: 'purchLineId',
+              dbDataType: 'NUMBER(19,0)',
+              generateType: 'pk'
+            },
+            {
+              fk: true,
+              name: 'purchId',
+              dbDataType: 'NUMBER(19,0)',
+              generateType: 'fk',
+              refTable: 'PurchTable',
+              refField: 'purchId'
+            },
+            {
+              fk: true,
+              name: 'prodId',
+              dbDataType: 'NUMBER(19,0)',
+              generateType: 'fk',
+              refTable: 'Product',
+              refField: 'productId'
+            },
+            {
+              name: 'prodName',
+              dbDataType: 'VARCHAR2(255 CHAR)',
+              generateType: ''
+            },
+            {
+              name: 'qty',
+              dbDataType: 'NUMBER(6,0)',
+              generateType: ''
+            },
+            {
+              name: 'price',
+              dbDataType: 'NUMBER(9,2)',
+              generateType: ''
+            }
+          ]
+        },
+        {
+          name: 'Product',
+          multiplicator: 1,
+          refs: ['Address'],
+          fields: [
+            {
+              pk: true,
+              name: 'productId',
+              dbDataType: 'NUMBER(19,0)',
+              generateType: 'pk'
+            },
+            {
+              fk: true,
+              name: 'prodWarehoueseAddressId',
+              dbDataType: 'NUMBER(19,0)',
+              generateType: 'fk',
+              refTable: 'Address',
+              refField: 'addressId'
+            },
+            {
+              name: 'prodName',
+              dbDataType: 'VARCHAR2(255 CHAR)',
+              generateType: ''
+            },
+            {
+              name: 'prodCategory',
+              dbDataType: 'VARCHAR2(255 CHAR)',
+              generateType: ''
+            },
+            {
+              name: 'basePrice',
+              dbDataType: 'NUMBER(9,2)',
+              generateType: ''
+            }
+          ]
+        },
+        {
+          name: 'Customers',
+          multiplicator: 1,
+          refs: ['Address'],
+          fields: [
+            {
+              pk: true,
+              name: 'custId',
+              dbDataType: 'NUMBER(19,0)',
+              generateType: 'pk'
+            },
+            {
+              name: 'custName',
+              dbDataType: 'VARCHAR2(255 CHAR)',
+              generateType: ''
+            },
+            {
+              name: 'custCategory',
+              dbDataType: 'VARCHAR2(255 CHAR)',
+              generateType: ''
+            },
+            {
+              fk: true,
+              name: 'custAddressId',
+              dbDataType: 'NUMBER(19,0)',
+              generateType: 'fk',
+              refTable: 'Address',
+              refField: 'addressId'
+            }
+          ]
+        },
+        {
+          name: 'Address',
+          multiplicator: 1,
+          refs: [],
+          fields: [
+            {
+              pk: true,
+              name: 'addressId',
+              dbDataType: 'NUMBER(19,0)',
+              generateType: 'pk'
+            },
+            {
+              name: 'country',
+              dbDataType: 'VARCHAR2(255 CHAR)',
+              generateType: ''
+            },
+            {
+              name: 'countryAbbr',
+              dbDataType: 'VARCHAR2(5 CHAR)',
+              generateType: ''
+            },
+            {
+              name: 'city',
+              dbDataType: 'VARCHAR2(255 CHAR)',
+              generateType: ''
+            },
+            {
+              name: 'streetAddress',
+              dbDataType: 'VARCHAR2(255 CHAR)',
+              generateType: ''
+            },
+            {
+              name: 'zipCode',
+              dbDataType: 'VARCHAR2(15 CHAR)',
+              generateType: ''
+            }
+          ]
+        }
+      ]
+    },
+    {
+      name: 'Second Schema',
+      type: 'Oracle',
+      multiplicator: 1,
+      connection: {},
+      tables: [
+        {
+          name: 'PurchLine',
+          multiplicator: 0,
+          refs: [],
+          fields: [
+            {
+              pk: true,
+              name: 'purchLineId',
+              dbDataType: 'NUMBER(19,0)',
+              generateType: ''
+            },
+            {
+              fk: true,
+              name: 'purchId',
+              dbDataType: 'NUMBER(19,0)',
+              generateType: '',
+              refTable: 'PurchTable',
+              refField: 'purchId'
+            },
+            {
+              name: 'prodName',
+              dbDataType: 'VARCHAR2(255 CHAR)',
+              generateType: ''
+            },
+            {
+              name: 'qty',
+              dbDataType: 'NUMBER(6,0)',
+              generateType: ''
+            },
+            {
+              name: 'price',
+              dbDataType: 'NUMBER(9,2)',
+              generateType: ''
+            }
+          ]
+        }
+      ]
+    }
+  ],
+  statistics: {
+    schemasBar: {
+      data: {
+        labels: ['First Schema', 'Second Schema'],
+        series: [[12, 17], [12, 29]]
       },
-      {
-        name: 'PurchLine',
-        fromField: 'purchId',
-        toTable: 'PurchTable',
-        toField: 'purchId',
-        fields: [
-          {
-            name: 'purchLineId',
-            dbDataType: 'NUMBER(19,0)',
-            generateType: ''
-          },
-          {
-            name: 'purchId',
-            dbDataType: 'NUMBER(19,0)',
-            generateType: ''
-          },
-          {
-            name: 'prodName',
-            dbDataType: 'VARCHAR2(255 CHAR)',
-            generateType: ''
-          },
-          {
-            name: 'qty',
-            dbDataType: 'NUMBER(6,0)',
-            generateType: ''
-          },
-          {
-            name: 'price',
-            dbDataType: 'NUMBER(9,2)',
-            generateType: ''
-          }
-        ]
+      options: {
+        seriesBarDistance: 15,
+        low: 0,
+        high: 50,
+        height: '300px',
+        chartPadding: {
+          top: 0,
+          right: 0,
+          bottom: 0,
+          left: 0
+        }
       }
-    ]
+    },
+    connectionsPie: {
+      data: {
+        labels: ['Oracle', 'PostgreSQL'],
+        series: [12, 17]
+      },
+      options: {
+        height: '300px'
+      }
+    },
+    generatedHBar: {
+      data: {
+        labels: ['Table1', 'Table 2'],
+        series: [[500, 372]]
+      },
+      options: {
+        height: '300px',
+        seriesBarDistance: 15,
+        low: 0,
+        high: 1000,
+        reverseData: true,
+        horizontalBars: true,
+        axisY: {
+          offset: 70
+        },
+        chartPadding: {
+          top: 0,
+          right: 0,
+          bottom: 0,
+          left: 0
+        }
+      }
+    },
+    generatedRows: { value: '10000' },
+    errors: { value: '104' },
+    fieldsPerTable: { value: '6.5' },
+    generatedDatabase: { value: '7' }
   }
 };
