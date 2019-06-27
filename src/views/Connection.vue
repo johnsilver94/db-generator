@@ -1,56 +1,62 @@
 <template>
   <v-container fill-height fluid grid-list-xl>
     <v-layout justify-center wrap>
-      <v-flex xs12 md8>
-        <material-card color="green" title="Database connection" text="Complete connection data">
+      <v-flex xs12 md12 lg8>
+        <material-card
+          color="secondary"
+          title="Database connection"
+          text="Complete connection data"
+        >
           <v-form ref="connectionForm" lazy-validation>
             <v-container py-0>
               <v-layout wrap>
-                <v-flex xs12 md12>
+                <v-flex xs12>
                   <v-text-field
                     v-model="currentConnection.name"
-                    :rules="connectionRules.connectionName"
+                    :rules="connectionRules.name"
                     label="Connection name"
+                    placeholder="Ex: My Connection"
                   />
                 </v-flex>
-                <v-flex xs12 md8>
+                <v-flex xs12 lg8>
                   <v-select
-                    v-model="currentConnection.client"
-                    :rules="connectionRules.client"
-                    :items="clients"
+                    v-model="currentConnection.database"
+                    :rules="connectionRules.database"
+                    :items="databasesNames"
                     label="Client"
                     class="purple-input"
                   ></v-select>
                 </v-flex>
-                <v-flex xs12 md8>
+                <v-flex xs12 lg8>
                   <v-text-field
                     v-model="currentConnection.dbName"
-                    :rules="connectionRules.database"
+                    :rules="connectionRules.dbName"
                     v-if="currentConnection.client == 'pg'"
                     label="Database"
                     class="purple-input"
                   />
                 </v-flex>
-                <v-flex xs12 md8>
+                <v-flex xs12 lg8>
                   <v-text-field
-                    v-model="currentConnection.connectString"
-                    :rules="connectionRules.connectString"
+                    v-model="currentConnection.dbConnectionString"
+                    :rules="connectionRules.dbConnectionString"
                     label="Connection String"
                     class="purple-input"
+                    placeholder="Ex: localhost/orcl"
                   />
                 </v-flex>
-                <v-flex xs12 md8>
+                <v-flex xs12 lg6>
                   <v-text-field
-                    v-model="currentConnection.user"
-                    :rules="connectionRules.user"
+                    v-model="currentConnection.dbUser"
+                    :rules="connectionRules.dbUser"
                     label="User"
                     class="purple-input"
                   />
                 </v-flex>
-                <v-flex xs12 md8>
+                <v-flex xs12 lg6>
                   <v-text-field
-                    v-model="currentConnection.password"
-                    :rules="connectionRules.password"
+                    v-model="currentConnection.dbPass"
+                    :rules="connectionRules.dbPass"
                     :append-icon="showPassword ? 'mdi-eye' : 'mdi-eye-off'"
                     :type="showPassword ? 'text' : 'password'"
                     label="Password"
@@ -58,7 +64,14 @@
                     class="purple-input"
                   ></v-text-field>
                 </v-flex>
-                <v-flex xs12 text-xs-right>
+                <v-flex xs6 sm4 lg2 text-xs-left>
+                  <v-btn
+                    class="mx-0 font-weight-light"
+                    color="tertiary"
+                    @click="cancelConnection()"
+                  >Cancel</v-btn>
+                </v-flex>
+                <v-flex xs6 sm8 lg10 text-xs-right>
                   <v-btn
                     class="mx-0 font-weight-light"
                     color="info"
@@ -75,8 +88,8 @@
           </v-form>
         </material-card>
       </v-flex>
-      <v-flex xs12 md4>
-        <material-card class="card-tabs" color="red">
+      <v-flex xs12 md12 lg4>
+        <material-card class="card-tabs" color="primary">
           <v-flex slot="header">
             <v-tabs v-model="tabs" color="transparent" slider-color="white">
               <span
@@ -86,10 +99,10 @@
               <v-tab class="mr-3" @click="filter = 'All';">All</v-tab>
               <v-tab
                 class="mr-3"
-                v-for="(database,index) in databases"
+                v-for="(databaseName,index) in databasesNames"
                 :key="index"
-                @click="filter = database.name;"
-              >{{database.name}}</v-tab>
+                @click="filter = databaseName;"
+              >{{databaseName}}</v-tab>
             </v-tabs>
           </v-flex>
 
@@ -152,7 +165,7 @@
 
 
 <script>
-import { mapMutations, mapState, mapGetters } from "vuex";
+import { mapActions, mapMutations, mapState, mapGetters } from "vuex";
 import axios from "axios";
 
 export default {
@@ -160,30 +173,24 @@ export default {
     return {
       //Connection Form
       showPassword: false,
-      clients: ["oracledb", "pg"],
-      databases: [
-        { name: "Oracle", client: "oracledb" },
-        { name: "PostgreSQL", client: "pg" }
-      ],
       currentConnection: {},
       defaultConnection: {
         name: "",
+        database: "",
         client: "",
-        connectString: "",
-        user: "",
-        password: "",
-        database: ""
+        dbConnectionString: "",
+        dbUser: "",
+        dbPass: ""
       },
       connectionRules: {
-        connectionName: [
+        name: [
           v => !!v || "Connection name is required",
           v => (v && v.length <= 50) || "Name must be less than 50 characters"
         ],
-        client: [v => !!v || "Client is required"],
-        database: [v => !!v || "Database is required"],
-        connectString: [v => !!v || "Connection string is required"],
-        user: [v => !!v || "User is required"],
-        password: [v => !!v || "Password is required"]
+        dbName: [v => !!v || "Database is required"],
+        dbConnectionString: [v => !!v || "Connection string is required"],
+        dbUser: [v => !!v || "User is required"],
+        dbPass: [v => !!v || "Password is required"]
       },
       //Notification
       color: "info",
@@ -198,24 +205,28 @@ export default {
     };
   },
   computed: {
-    ...mapGetters("app", ["notifications", "connections"])
+    ...mapGetters("app", {
+      notifications: "getNotifications",
+      currentNotification: "getCurrentNotification",
+      connections: "getConnections",
+      databasesNames: "getDatabasesNames",
+      databasesClients: "getDatabasesClients"
+    })
   },
   methods: {
+    ...mapActions("app", {
+      save: "saveConnection",
+      delete: "deleteConnection",
+      test: "testConnection"
+    }),
+    ...mapMutations("app", {
+      setCurrentNotification: "setCurrentNotification"
+    }),
     validateConnectionForm() {
       return this.$refs.connectionForm.validate();
     },
     resetValidationConnectionForm() {
       return this.$refs.connectionForm.resetValidation();
-    },
-    checkItem(index) {
-      let currentState = this.connections[index].checked;
-
-      if (currentState) {
-        this.connections.forEach(element => {
-          element.checked = false;
-        });
-      }
-      this.connections[index].checked = !this.connections[index].checked;
     },
     connectionsFilter(filter) {
       return this.connections.filter(connection => {
@@ -227,34 +238,37 @@ export default {
       });
     },
     testConnection() {
-      if (!this.validateConnectionForm()) {
-        const notification = {
-          text: `Please  fill in all all required fields.`,
-          type: "warning"
-        };
+      const notification = {};
 
-        this.showNotification(notification);
+      if (!this.validateConnectionForm()) {
+        notification.text = `Please  fill in all all required fields.`;
+        notification.type = "warning";
+
+        this.setCurrentNotification(notification);
+        this.showNotification();
       } else {
         axios
           .post(`http://localhost:3000/connect`, this.currentConnection)
           .then(response => {
-            if (response.status == 200) {
-              const notification = {
-                text: `connection "${this.currentConnection.name.toUpperCase()}" succeed`,
-                type: "success"
-              };
+            if (response.status === 200) {
+              notification.text = `Connection "${this.currentConnection.name.toUpperCase()}" succeed`;
+              notification.type = "success";
 
-              this.showNotification(notification);
+              this.setCurrentNotification(notification);
+              this.showNotification();
             }
           })
           .catch(error => {
-            const notification = {
-              text: `connection "${this.currentConnection.name.toUpperCase()}" was failed with ${
-                error.response.data
-              }`,
-              type: "error"
-            };
-            this.showNotification(notification);
+            notification.text = `Connection "${this.currentConnection.name.toUpperCase()}" was failed with ${
+              error.response.data
+            }`;
+            notification.type = "error";
+
+            console.log(notification);
+            console.log(error.response.data);
+
+            this.setCurrentNotification(notification);
+            this.showNotification();
           });
       }
     },
@@ -265,35 +279,9 @@ export default {
           connection => connection.name === this.currentConnection.name
         );
 
-        if (duplicateIndex == -1) {
-          switch (this.currentConnection.client) {
-            case "oracledb":
-              this.currentConnection.database = "Oracle";
-              if (this.databases.indexOf("Oracle") == -1)
-                this.databases.push("Oracle");
-              break;
-            case "pg":
-              this.currentConnection.database = "PostgreSQL";
-              if (this.databases.indexOf("PostgreSQL") == -1)
-                this.databases.push("PostgreSQL");
-              break;
-          }
+        this.save(this.currentConnection);
 
-          this.connections.push(this.currentConnection);
-        } else {
-          Object.assign(
-            this.connections[duplicateIndex],
-            this.currentConnection
-          );
-          const notification = {
-            text: `Connection with name ${
-              this.currentConnection.name
-            } was overwrited.`,
-            type: "warning"
-          };
-
-          this.showNotification(notification);
-        }
+        this.showNotification();
         this.currentConnection = {};
         this.resetValidationConnectionForm();
       }
@@ -303,22 +291,18 @@ export default {
     },
     deleteConnection(index) {
       if (confirm("Are you sure you want to delete this Connection?")) {
-        const notification = {
-          text: `connection "${this.connections[
-            index
-          ].name.toUpperCase()}" was removed`,
-          type: "warning"
-        };
-
-        this.showNotification(notification);
-        this.connections.splice(index, 1);
+        this.delete(index);
+        this.showNotification();
       }
     },
-    showNotification(notification) {
-      this.color = notification.type;
-      this.text = notification.text;
+    cancelConnection() {
+      this.currentConnection = {};
+      this.resetValidationConnectionForm();
+    },
+    showNotification() {
+      this.color = this.currentNotification.type;
+      this.text = this.currentNotification.text;
 
-      this.notifications.push(notification);
       this.notificationbar = true;
     }
   }

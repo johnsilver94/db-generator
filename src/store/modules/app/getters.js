@@ -1,33 +1,39 @@
 export default {
-  databases: state => {
-    return state.databases;
-  },
-  notifications: state => {
+  getNotifications: state => {
     return state.notifications;
   },
-  connections: state => {
+  getCurrentNotification: state => {
+    return state.currentNotification;
+  },
+  getConnections: state => {
     return state.connections;
   },
-  schemas: state => {
+  getDatabasesNames: state => {
+    return state.databasesNames;
+  },
+  getDatabasesClients: state => {
+    return state.databasesClients;
+  },
+  getSchemas: state => {
     return state.schemas;
   },
-  dbSchema: state => index => {
+  getDbSchema: state => index => {
     return state.schemas[index];
   },
-  databaseDataTypes: state => db => {
+  getDbDataTypes: state => db => {
     switch (db) {
       case 'Oracle':
         return state.oracleDataTypes;
-      case 'PostgreSQL':
+      case 'Postgres':
         return state.postgreDataTypes;
       default:
         return state.oracleDataTypes;
     }
   },
-  defaultSchemaIndex: state => {
+  getDefaultSchemaIndex: state => {
     return state.defaultSchemaIndex;
   },
-  statistics: state => {
+  getStatistics: state => {
     return state.statistics;
   }
 };

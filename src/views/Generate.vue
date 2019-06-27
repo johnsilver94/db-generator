@@ -69,7 +69,7 @@
             </v-toolbar>
           </template>
           <template v-slot:item="props">
-            <v-flex xs12 sm6 md4 lg3>
+            <v-flex xs12 sm6 md4 lg4>
               <v-card>
                 <v-card-title>
                   <v-flex md8 sm12>
@@ -95,23 +95,25 @@
                 <v-divider></v-divider>
                 <v-list dense>
                   <v-list-tile v-for="(field,index) in props.item.fields" :key="index">
-                    <v-flex md8>
+                    <v-flex md6>
                       <v-list-tile-content>{{field.name}}</v-list-tile-content>
                     </v-flex>
-                    <v-flex md4>
+                    <v-flex md6>
                       <v-list-tile-content class="align-end">
                         <v-select
                           v-if="field.pk || field.fk"
-                          v-model="field.generateType"
-                          :items="generateDataTypes"
+                          v-model="field.generateTypeDescription"
+                          :items="generateDataTypesDescription"
+                          @change="selectGenerateType(field)"
                           label="Gen type"
                           class="purple-input"
                           disabled
                         ></v-select>
                         <v-select
                           v-else
-                          v-model="field.generateType"
-                          :items="generateDataTypes"
+                          v-model="field.generateTypeDescription"
+                          :items="generateDataTypesDescription"
+                          @change="selectGenerateType(field)"
                           label="Gen type"
                           class="purple-input"
                         ></v-select>
@@ -217,6 +219,76 @@ export default {
         "system.mimeType",
         "system.semver"
       ],
+      generateDataTypesDescription: [
+        "Primary key",
+        "Foreign key",
+        "Address-ZipCode",
+        "Address-city",
+        "Address-StreetAddress",
+        "Address-SecondaryAddress",
+        "Address-County",
+        "Address-Country",
+        "Address-CountryCode",
+        "Commerce-Color",
+        "Commerce-Department",
+        "Commerce-ProductName",
+        "Commerce-Price",
+        "Commerce-ProductMaterial",
+        "Commerce-Product",
+        "Company-CompanyName",
+        "Company-CompanySuffix",
+        "Company-CatchPhrase",
+        "Date-Past",
+        "Date-Future",
+        "Date-Recent",
+        "Date-Month",
+        "Date-Weekday",
+        "Finance-Account",
+        "Finance-AccountName",
+        "Finance-TransactionType",
+        "Finance-CurrencyCode",
+        "finance-CurrencyName",
+        "Finance-CurrencySymbol",
+        "Finance-BitcoinAddress",
+        "Finance-Iban",
+        "Finance-Bic",
+        "Helpers-CreateCard",
+        "helpers-ContextualCard",
+        "Helpers-UserCard",
+        "Helpers-CreateTransaction",
+        "Internet-Avatar",
+        "Internet-Email",
+        "Internet-ExampleEmail",
+        "Internet-UserName",
+        "Internet-Protocol",
+        "Internet-Url",
+        "Internet-DomainName",
+        "Internet-Ip",
+        "Internet-Ipv6",
+        "Internet-UserAgent",
+        "Internet-Color",
+        "Internet-Mac",
+        "Internet-Password",
+        "Lorem-Word",
+        "Lorem-Words",
+        "Lorem-Sentence",
+        "Lorem-Slug",
+        "Lorem-Sentences",
+        "Lorem-Paragraph",
+        "Lorem-Paragraphs",
+        "Lorem-Text",
+        "Lorem-Lines",
+        "Name-FindName",
+        "Name-JobTitle",
+        "Name-Title",
+        "Phone-PhoneNumber",
+        "Random-Uuid",
+        "Random-Boolean",
+        "Random-AlphaNumeric",
+        "System-FileName",
+        "System-MimeType",
+        "System-Semver"
+      ],
       //Schema
       editSchema: {
         name: "",
@@ -238,9 +310,9 @@ export default {
         multiplicator: [v => !!v || "Connection is required"]
       },
       databases: ["Oracle"],
-      rowsPerPageItems: [4, 8, 12, 16, 20],
+      rowsPerPageItems: [3, 6, 9, 12, 15],
       pagination: {
-        rowsPerPage: 4
+        rowsPerPage: 3
       },
       //Notification
       color: "info",
@@ -252,14 +324,14 @@ export default {
     };
   },
   computed: {
-    ...mapGetters("app", [
-      "statistics",
-      "schemas",
-      "connections",
-      "notifications",
-      "defaultSchemaIndex",
-      "dbSchema"
-    ]),
+    ...mapGetters("app", {
+      statistics: "getStatistics",
+      schemas: "getSchemas",
+      connections: "getConnections",
+      notifications: "getNotifications",
+      defaultSchemaIndex: "getDefaultSchemaIndex",
+      dbSchema: "getDbSchema"
+    }),
     schema() {
       return this.dbSchema(this.defaultSchemaIndex);
     },
@@ -357,7 +429,9 @@ export default {
         this.showNotification(notification);
       } else {
         axios
-          .post(`http://localhost:3000/generate`, this.editSchema)
+          .post(`http://localhost:3000/generate`, this.editSchema, {
+            timeout: 60 * 60 * 24 * 1000
+          })
           .then(response => {
             if (response.status == 200) {
               const notification = {
@@ -380,11 +454,19 @@ export default {
       }
     },
     showNotification(notification) {
-      this.color = notification.type; 
+      this.color = notification.type;
       this.text = notification.text;
 
       this.notifications.push(notification);
       this.notificationbar = true;
+    },
+    selectGenerateType(field) {
+      const index = this.generateDataTypesDescription.indexOf(
+        field.generateTypeDescription
+      );
+      field.generateType = this.generateDataTypes[index];
+
+      console.log(field);
     }
   }
 };

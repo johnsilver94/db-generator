@@ -12,23 +12,16 @@
     <v-spacer/>
     <v-toolbar-items>
       <v-flex align-center layout py-2>
-        <v-text-field
-          v-if="responsiveInput"
-          class="mr-4 mt-2 purple-input"
-          label="Search..."
-          hide-details
-          color="purple"
-        />
         <router-link v-ripple class="toolbar-items" to="/">
           <v-icon color="tertiary">mdi-view-dashboard</v-icon>
         </router-link>
         <v-menu bottom left content-class="dropdown-menu" offset-y transition="slide-y-transition">
-          <notification-bell v-ripple slot="activator" class="toolbar-items">
+          <v-btn flat v-ripple slot="activator" class="toolbar-items">
             <v-badge color="error" overlap>
               <template slot="badge" v-if="notifications.length > 0">{{ notifications.length }}</template>
               <v-icon color="tertiary">mdi-bell</v-icon>
             </v-badge>
-          </notification-bell>
+          </v-btn>
           <v-card>
             <v-list dense>
               <v-list-tile

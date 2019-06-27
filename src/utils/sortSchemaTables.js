@@ -5,12 +5,17 @@ export function sortTables(schemaTables) {
     schemaTables.forEach(element => {
       if (!element.refs.length) {
         sortedTables.push(element);
-        addReferenceTables(element.name);
       }
     });
   } catch (error) {
     throw error;
   }
+
+  var sortTables2 = Object.assign([], sortedTables);
+
+  sortTables2.forEach(element => {
+    addReferenceTables(element.name);
+  });
 
   function addReferenceTables(parentTableName) {
     schemaTables.filter(table => {
@@ -29,15 +34,26 @@ export function sortTables(schemaTables) {
   function checkReferences(references) {
     var ok = true;
     references.forEach(reference => {
-      var table = false;
-      table = sortedTables.find(table => {
+      var findTable = false;
+      findTable = sortedTables.find(table => {
+        console.log(`Ref=${reference} ---- table=${table.name}`);
         if (table.name === reference) return true;
       });
 
-      if (!table) ok = false;
+      if (!findTable) ok = false;
+      console.log(ok);
     });
     return ok;
   }
+
+  // function isInserted(tableName) {
+  //   var index = sortedTables.findIndex(table => {
+  //     return table.name === tableName;
+  //   });
+
+  //   if (index === -1) return false;
+  //   else return true;
+  // }
 
   return sortedTables;
 }

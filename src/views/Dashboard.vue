@@ -253,12 +253,12 @@ export default {
     };
   },
   computed: {
-    ...mapGetters("app", [
-      "statistics",
-      "schemas",
-      "connections",
-      "notifications"
-    ])
+    ...mapGetters("app", {
+      statistics: "getStatistics",
+      schemas: "getSchemas",
+      connections: "getConnections",
+      notifications: "getNotifications"
+    })
   },
   methods: {
     ...mapMutations("app", ["setDefaultSchemaIndex"]),

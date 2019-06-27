@@ -223,7 +223,6 @@
 
 <script>
 import { mapGetters, mapMutations, mapActions } from "vuex";
-// const sortTables = require("../utils/sortSchemaTables");
 import { sortTables } from "../utils/sortSchemaTables";
 import { constants } from "crypto";
 
@@ -300,7 +299,9 @@ export default {
     defaultField: {
       name: "",
       dbDataType: "",
-      generateType: ""
+      generateType: "",
+      refTable: "",
+      refField: ""
     },
     postgreDataTypes: [],
     oracleDataTypes: [
@@ -337,13 +338,13 @@ export default {
   }),
 
   computed: {
-    ...mapGetters("app", [
-      "schemas",
-      "dbSchema",
-      "databaseDataTypes",
-      "defaultSchemaIndex",
-      "notifications"
-    ]),
+    ...mapGetters("app", {
+      schemas: "getSchemas",
+      dbSchema: "getDbSchema",
+      dbDataTypes: "getDbDataTypes",
+      defaultSchemaIndex: "getDefaultSchemaIndex",
+      notifications: "getNotifications"
+    }),
     formTableTitle() {
       return this.editedTableIndex === -1 ? "New Table" : "Edit Table";
     },
@@ -365,7 +366,7 @@ export default {
       switch (db) {
         case "Oracle":
           return this.oracleDataTypes;
-        case "PostgreSQL":
+        case "Postgres":
           return this.postgreDataTypes;
         default:
           return this.oracleDataTypes;
@@ -548,12 +549,26 @@ export default {
           this.editField.fk = false;
         }
 
-        if (this.editField.pk) this.editField.generateType = "pk";
-        if (this.editField.fk) this.editField.generateType = "fk";
+        if (this.editField.pk) {
+          this.editField.generateType = "pk";
+          this.editField.generateType = "pk";
+        }
+        if (this.editField.fk) {
+          this.editField.generateType = "fk";
+          if (
+            this.tables[this.currentTableIndex].refs.indexOf(
+              this.editField.refTable
+            ) == -1
+          )
+            this.tables[this.currentTableIndex].refs.push(
+              this.editField.refTable
+            );
+        }
 
-        if (!duplicateIndex) {
+        if (duplicateIndex == -1) {
           this.tableFields.push(this.editField);
           this.closeField();
+          console.log(this.editField);
         } else {
           this.tableFields[duplicateIndex] = Object.assign({}, this.editField);
 

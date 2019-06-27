@@ -31,7 +31,7 @@
 
 <script>
 export default {
-  data: () => ({}),
+  data: () => ({}), 
   computed: {
     notifications() {
       return this.$store.state.app.notifications;

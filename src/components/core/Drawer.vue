@@ -34,7 +34,7 @@
           </v-list-tile-action>
           <v-list-tile-title v-text="link.text"/>
         </v-list-tile>
-        <v-list-tile
+        <!-- <v-list-tile
           diable
           active-class="primary"
           class="v-list-item v-list__tile--buy"
@@ -44,7 +44,7 @@
             <v-icon>mdi-cogs</v-icon>
           </v-list-tile-action>
           <v-list-tile-title class="font-weight-light">Settings</v-list-tile-title>
-        </v-list-tile>
+        </v-list-tile>-->
       </v-layout>
     </v-img>
   </v-navigation-drawer>
