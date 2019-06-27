@@ -26,7 +26,8 @@
     "build": "vue-cli-service build",
     "lint": "vue-cli-service lint",
     "server": "nodemon server/server.js",
-    "count": "cloc C:/Users/silver_fang/Desktop/DB-generator/db-generator --exclude-dir=.vscode,dist,node_modules --exclude-ext=.gitignore,.lock"
+    "count": "cloc C:/Users/silver_fang/Desktop/DB-generator/db-generator --exclude-dir=.vscode,dist,node_modules --exclude-ext=.gitignore,.lock",
+    "count2": "cloc C:/Users/silver_fang/Desktop/DB-generator/db-generator --exclude-dir=.vscode,dist --exclude-ext=.gitignore,.lock"
   },
   "dependencies": {
     "chartist": "0.11.0",
@@ -51,7 +52,7 @@
     "@vue/cli-plugin-eslint": "^3.0.1",
     "@vue/cli-service": "^3.0.1",
     "@vue/eslint-config-standard": "^3.0.1",
-    "axios": "^0.17.1",
+    "axios": "^0.19.0",
     "eslint-config-prettier": "^4.1.0",
     "eslint-plugin-prettier": "^3.0.1",
     "material-design-icons-iconfont": "^3.0.3",
