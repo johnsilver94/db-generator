@@ -39,6 +39,7 @@ function sortTables(schemaTables) {
     return ok;
   }
 
+  console.log(sortedTables);
   return sortedTables;
 }
 

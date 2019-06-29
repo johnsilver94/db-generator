@@ -418,6 +418,10 @@ export default {
   },
   methods: {
     ...mapActions("app", ["setTables"]),
+    ...mapActions("statistics", {
+      setSchemasBarData: "setSchemasBarData",
+      recalculateFieldsPerTable: "recalculateFieldsPerTable"
+    }),
     validateSchemasForm() {
       return this.$refs.schemasForm.validate();
     },
@@ -467,6 +471,9 @@ export default {
           this.showNotification(notification);
         }
       }
+
+      this.setSchemasBarData(this.schemas);
+      this.recalculateFieldsPerTable(this.schemas);
     },
     editTableItem(item) {
       this.editedTableIndex = this.tables.indexOf(item);
@@ -551,10 +558,11 @@ export default {
 
         if (this.editField.pk) {
           this.editField.generateType = "pk";
-          this.editField.generateType = "pk";
+          this.editField.generateDataTypesDescription = "Primary key";
         }
         if (this.editField.fk) {
           this.editField.generateType = "fk";
+          this.editField.generateDataTypesDescription = "Foreign key";
           if (
             this.tables[this.currentTableIndex].refs.indexOf(
               this.editField.refTable
@@ -568,7 +576,6 @@ export default {
         if (duplicateIndex == -1) {
           this.tableFields.push(this.editField);
           this.closeField();
-          console.log(this.editField);
         } else {
           this.tableFields[duplicateIndex] = Object.assign({}, this.editField);
 

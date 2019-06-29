@@ -1,14 +1,17 @@
+/* eslint-disable eqeqeq */
+/* eslint-disable curly */
+/* eslint-disable space-before-function-paren */
 const express = require('express');
 
 const router = express.Router();
 
-const config = require('../config');
+// const config = require('../config');
 
 const faker = require('faker');
 
 faker.locale = 'en';
 
-//Generate rows
+// Generate rows
 router.post('/', async (req, res) => {
   const schema = req.body;
   const baseMultiplicator = schema.multiplicator;
@@ -22,12 +25,12 @@ router.post('/', async (req, res) => {
       connectString: schema.connection.dbConnectionString
     }
   });
-  //Multiplicator
+  // Multiplicator
   try {
     for (var i = 1; i <= baseMultiplicator; i++) {
       var keys = {};
 
-      //Tables
+      // Tables
       for (var j = 0; j < schema.tables.length; j++) {
         var rows = [];
         var multiplicator = 1;
@@ -40,11 +43,11 @@ router.post('/', async (req, res) => {
           multiplicator = table.multiplicator;
         }
 
-        //Rows
+        // Rows
         for (var k = 1; k <= multiplicator; k++) {
           var row = {};
 
-          //Fields
+          // Fields
           for (var l = 0; l < table.fields.length; l++) {
             var field = table.fields[l];
             var fakerFunction = field.generateType.split('.');

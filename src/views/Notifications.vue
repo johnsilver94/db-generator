@@ -18,7 +18,7 @@
                   class="mb-3"
                   :color="notification.type"
                   dismissible
-                  @click="deleteNotification(key)"
+                  @click="deleteNotification(index)"
                 >{{notification.text}}</material-notification>
               </v-flex>
             </v-layout>
@@ -39,6 +39,7 @@ export default {
   },
   methods: {
     deleteNotification(index) {
+      console.log(this.notifications[index]);
       this.notifications.splice(index, 1);
     }
   }

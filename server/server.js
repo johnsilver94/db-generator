@@ -30,6 +30,6 @@ app.use((req, res) => {
   res.status(err.status || 500);
 });
 
-app.listen(config.PORT, () =>
-  console.log(`Example app listening on port ${config.PORT}!`)
+app.listen(config.SERVER_PORT, () =>
+  console.log(`Example app listening on port ${config.SERVER_PORT}!`)
 );

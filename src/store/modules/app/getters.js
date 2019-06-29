@@ -8,6 +8,9 @@ export default {
   getConnections: state => {
     return state.connections;
   },
+  getCurrentConnection: state => {
+    return state.currentConnection;
+  },
   getDatabasesNames: state => {
     return state.databasesNames;
   },
@@ -32,8 +35,5 @@ export default {
   },
   getDefaultSchemaIndex: state => {
     return state.defaultSchemaIndex;
-  },
-  getStatistics: state => {
-    return state.statistics;
   }
 };

@@ -13,7 +13,9 @@
 
           <template slot="actions">
             <v-icon class="mr-2" small>mdi-clock-outline</v-icon>
-            <span class="caption grey--text font-weight-light">updated 4 minutes ago</span>
+            <span
+              class="caption grey--text font-weight-light"
+            >{{ statistics.schemasBar.updateDate | moment("from", "now", true) }} ago</span>
           </template>
         </material-chart-card>
       </v-flex>
@@ -29,7 +31,9 @@
 
           <template slot="actions">
             <v-icon class="mr-2" small>mdi-clock-outline</v-icon>
-            <span class="caption grey--text font-weight-light">updated 4 minutes ago</span>
+            <span
+              class="caption grey--text font-weight-light"
+            >{{ statistics.connectionsPie.updateDate | moment("from", "now", true) }} ago</span>
           </template>
         </material-chart-card>
       </v-flex>
@@ -45,7 +49,9 @@
 
           <template slot="actions">
             <v-icon class="mr-2" small>mdi-clock-outline</v-icon>
-            <span class="caption grey--text font-weight-light">updated 4 minutes ago</span>
+            <span
+              class="caption grey--text font-weight-light"
+            >{{ statistics.generatedHBar.updateDate | moment("from", "now", true) }} ago</span>
           </template>
         </material-chart-card>
       </v-flex>
@@ -87,7 +93,7 @@
           title="Generated database"
           :value="statistics.generatedDatabase.value"
           sub-icon="mdi-update"
-          sub-text="Just Updated"
+          sub-text="Number of generated database"
         />
       </v-flex>
       <v-flex md12 lg12>
@@ -106,22 +112,11 @@
 
           <v-tabs-items v-model="tabs">
             <v-tab-item>
-              <v-list-tile>
-                <v-list-tile-title>
-                  <i>Schema name</i>
-                </v-list-tile-title>
-                <v-list-tile-title>
-                  <i>Database</i>
-                </v-list-tile-title>
-                <v-list-tile-title>
-                  <i>Nr. of tables</i>
-                </v-list-tile-title>
-              </v-list-tile>
               <v-list three-line v-for="(schema,index) in schemas" :item="schema" :key="index">
                 <v-list-tile>
                   <v-list-tile-title>{{schema.name}}</v-list-tile-title>
-                  <v-list-tile-title>{{schema.type}}</v-list-tile-title>
-                  <v-list-tile-title>{{schema.tables.length}}</v-list-tile-title>
+                  <v-list-tile-title>Database: {{schema.type}}</v-list-tile-title>
+                  <v-list-tile-title>Nr. of tables: {{schema.tables.length}}</v-list-tile-title>
                   <div class="d-flex">
                     <v-tooltip top content-class="top">
                       <v-btn
@@ -153,23 +148,6 @@
               </v-list>
             </v-tab-item>
             <v-tab-item>
-              <v-list-tile>
-                <v-list-tile-title>
-                  <i>Connection name</i>
-                </v-list-tile-title>
-                <v-list-tile-title>
-                  <i>Client</i>
-                </v-list-tile-title>
-                <v-list-tile-title>
-                  <i>Database</i>
-                </v-list-tile-title>
-                <v-list-tile-title>
-                  <i>Connection String</i>
-                </v-list-tile-title>
-                <v-list-tile-title>
-                  <i>User</i>
-                </v-list-tile-title>
-              </v-list-tile>
               <v-list
                 three-line
                 v-for="(connection,index) in connections"
@@ -178,10 +156,8 @@
               >
                 <v-list-tile>
                   <v-list-tile-title>{{connection.name}}</v-list-tile-title>
-                  <v-list-tile-title>{{connection.client}}</v-list-tile-title>
-                  <v-list-tile-title>{{connection.database}}</v-list-tile-title>
-                  <v-list-tile-title>{{connection.connectString}}</v-list-tile-title>
-                  <v-list-tile-title>{{connection.user}}</v-list-tile-title>
+                  <v-list-tile-title>Database: {{connection.database}}</v-list-tile-title>
+                  <v-list-tile-title>Connection: {{connection.dbConnectionString}}</v-list-tile-title>
                   <div class="d-flex">
                     <v-tooltip top content-class="top">
                       <v-btn
@@ -232,7 +208,7 @@
 </template>
 
 <script>
-import { mapGetters, mapMutations } from "vuex";
+import { mapGetters, mapMutations, mapActions } from "vuex";
 
 export default {
   data() {
@@ -254,14 +230,24 @@ export default {
   },
   computed: {
     ...mapGetters("app", {
-      statistics: "getStatistics",
       schemas: "getSchemas",
       connections: "getConnections",
       notifications: "getNotifications"
+    }),
+    ...mapGetters("statistics", {
+      statistics: "getStatistics"
     })
   },
   methods: {
-    ...mapMutations("app", ["setDefaultSchemaIndex"]),
+    ...mapMutations("app", {
+      setDefaultSchemaIndex: "setDefaultSchemaIndex",
+      setCurrentConnection: "setCurrentConnection"
+    }),
+    ...mapActions("statistics", {
+      setConnectionsPieData: "setConnectionsPieData",
+      setSchemasBarData: "setSchemasBarData",
+      recalculateFieldsPerTable: "recalculateFieldsPerTable"
+    }),
     deleteConnection(index) {
       if (confirm("Are you sure you want to delete this Connection?")) {
         const notification = {
@@ -273,9 +259,11 @@ export default {
 
         this.showNotification(notification);
         this.connections.splice(index, 1);
+        this.setConnectionsPieData(this.connections);
       }
     },
     editConnection(index) {
+      this.setCurrentConnection(Object.assign({}, this.connections[index]));
       this.$router.push("/connection");
     },
     deleteSchema(index) {
@@ -289,6 +277,8 @@ export default {
 
         this.showNotification(notification);
         this.schemas.splice(index, 1);
+        this.setSchemasBarData(this.schemas);
+        this.recalculateFieldsPerTable(this.schemas);
       }
     },
     editSchema(index) {

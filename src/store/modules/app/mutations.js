@@ -13,6 +13,9 @@ export default {
   setConnection: (state, payload) => {
     Object.assign(state.connections[payload.duplicateIndex], payload.payload);
   },
+  setCurrentConnection: (state, payload) => {
+    state.currentConnection = payload;
+  },
   addConnection: (state, payload) => {
     state.connections.push(payload);
   },

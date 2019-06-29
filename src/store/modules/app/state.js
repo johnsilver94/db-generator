@@ -5,6 +5,7 @@ export default {
   databasesNames: ['Oracle', 'Postgres'],
   databasesClients: ['oracledb', 'pg'],
   currentNotification: {},
+  currentConnection: {},
   notifications: [
     // { type: 'warning', text: 'Mike, John responded to your email' },
     // { type: 'info', text: 'You have 5 new tasks' },
@@ -846,61 +847,5 @@ export default {
         }
       ]
     }
-  ],
-  statistics: {
-    schemasBar: {
-      data: {
-        labels: ['First Schema', 'Second Schema'],
-        series: [[12, 17], [12, 29]]
-      },
-      options: {
-        seriesBarDistance: 15,
-        low: 0,
-        high: 50,
-        height: '300px',
-        chartPadding: {
-          top: 0,
-          right: 0,
-          bottom: 0,
-          left: 0
-        }
-      }
-    },
-    connectionsPie: {
-      data: {
-        labels: ['Oracle', 'PostgreSQL'],
-        series: [12, 17]
-      },
-      options: {
-        height: '300px'
-      }
-    },
-    generatedHBar: {
-      data: {
-        labels: ['Table1', 'Table 2'],
-        series: [[500, 372]]
-      },
-      options: {
-        height: '300px',
-        seriesBarDistance: 15,
-        low: 0,
-        high: 1000,
-        reverseData: true,
-        horizontalBars: true,
-        axisY: {
-          offset: 70
-        },
-        chartPadding: {
-          top: 0,
-          right: 0,
-          bottom: 0,
-          left: 0
-        }
-      }
-    },
-    generatedRows: { value: '10000' },
-    errors: { value: '104' },
-    fieldsPerTable: { value: '6.5' },
-    generatedDatabase: { value: '7' }
-  }
+  ]
 };
