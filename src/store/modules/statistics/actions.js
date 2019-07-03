@@ -87,22 +87,25 @@ export default {
 
 function schemaGeneratedRows(tables, schemaMultiplicator) {
   var schemaGeneratedRows = 0;
-  var tableGeneratedRows = 0;
   tables.forEach(table => {
-    if (table.refs.length === 0) {
-      schemaGeneratedRows =
-        schemaGeneratedRows + table.multiplicator * schemaMultiplicator;
-    } else {
-      tableGeneratedRows = 0;
-      tableGeneratedRows = tableGeneratedRows * schemaMultiplicator;
-      table.refs.forEach(ref => {
-        var refTable = tables.find(element => {
-          return element.name === ref;
-        });
-        tableGeneratedRows = tableGeneratedRows * refTable.multiplicator;
-      });
-      schemaGeneratedRows += tableGeneratedRows;
-    }
+    schemaGeneratedRows =
+      schemaGeneratedRows +
+      schemaMultiplicator * tableMultiplicator(tables, table.name);
   });
   return schemaGeneratedRows;
+}
+function tableMultiplicator(tables, tableName) {
+  var multiplicator = 1;
+  var table = tables.find(table => {
+    return table.name === tableName;
+  });
+
+  multiplicator = multiplicator * table.multiplicator;
+
+  if (table.refs.length) {
+    table.refs.forEach(ref => {
+      multiplicator = multiplicator * tableMultiplicator(tables, ref);
+    });
+  }
+  return multiplicator;
 }

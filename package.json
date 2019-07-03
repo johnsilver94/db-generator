@@ -28,7 +28,7 @@
     "build": "vue-cli-service build",
     "lint": "vue-cli-service lint",
     "server": "nodemon server/server.js",
-    "count": "cloc C:/Users/silver_fang/Desktop/DB-generator/db-generator --exclude-dir=.vscode,dist,node_modules --exclude-ext=.gitignore,.lock",
+    "count": "cloc C:/Users/silver_fang/Desktop/DB-generator/db-generator --exclude-dir=.vscode,dist --exclude-ext=.gitignore,.lock",
     "sort_testing": "node src/utils/sort.js"
   },
   "dependencies": {

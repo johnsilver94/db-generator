@@ -31,7 +31,7 @@
 
 <script>
 export default {
-  data: () => ({}), 
+  data: () => ({}),
   computed: {
     notifications() {
       return this.$store.state.app.notifications;
@@ -39,7 +39,6 @@ export default {
   },
   methods: {
     deleteNotification(index) {
-      console.log(this.notifications[index]);
       this.notifications.splice(index, 1);
     }
   }

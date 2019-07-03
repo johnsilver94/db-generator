@@ -38,7 +38,7 @@ export default {
         height: '300px',
         seriesBarDistance: 15,
         low: 0,
-        high: 1000,
+        high: 100000,
         reverseData: true,
         horizontalBars: true,
         axisY: {

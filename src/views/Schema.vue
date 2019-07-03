@@ -293,6 +293,7 @@ export default {
       name: "",
       dbDataType: "",
       generateType: "",
+      generateDataTypesDescription:"",
       refTable: "",
       refField: ""
     },
@@ -300,6 +301,7 @@ export default {
       name: "",
       dbDataType: "",
       generateType: "",
+      generateDataTypesDescription:"",
       refTable: "",
       refField: ""
     },
@@ -558,11 +560,11 @@ export default {
 
         if (this.editField.pk) {
           this.editField.generateType = "pk";
-          this.editField.generateDataTypesDescription = "Primary key";
+          this.editField.generateTypeDescription = "Primary key";
         }
         if (this.editField.fk) {
           this.editField.generateType = "fk";
-          this.editField.generateDataTypesDescription = "Foreign key";
+          this.editField.generateTypeDescription = "Foreign key";
           if (
             this.tables[this.currentTableIndex].refs.indexOf(
               this.editField.refTable

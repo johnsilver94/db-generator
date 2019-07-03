@@ -7,32 +7,40 @@ export default {
   currentNotification: {},
   currentConnection: {},
   notifications: [
-    // { type: 'warning', text: 'Mike, John responded to your email' },
-    // { type: 'info', text: 'You have 5 new tasks' },
-    // { type: 'success', text: "You're now a friend with Andrew" },
-    // { type: 'error', text: 'Another Notification' },
-    // { type: 'warning', text: 'Another One' }
+    { type: 'warning', text: 'Mike, John responded to your email' },
+    { type: 'info', text: 'You have 5 new tasks' },
+    { type: 'success', text: "You're now a friend with Andrew" },
+    { type: 'error', text: 'Another Notification' },
+    { type: 'warning', text: 'Another One' },
+    { type: 'warning', text: 'Mike, John responded to your email' },
+    { type: 'info', text: 'You have 5 new tasks' },
+    { type: 'success', text: "You're now a friend with Andrew" },
+    { type: 'error', text: 'Another Notification' },
+    { type: 'warning', text: 'Another One' },
+    { type: 'warning', text: 'Mike, John responded to your email' },
+    { type: 'info', text: 'You have 5 new tasks' },
+    { type: 'success', text: "You're now a friend with Andrew" }
   ],
   connections: [
+    // {
+    //   name: 'Oracle connection',
+    //   database: 'Oracle',
+    //   client: 'oracledb',
+    //   dbConnectionString: 'localhost/orcl',
+    //   dbUser: 'C##john',
+    //   dbPass: 'john'
+    // },
+    // {
+    //   name: 'Postgres connection',
+    //   database: 'Postgres',
+    //   client: 'pg',
+    //   dbName: 'postgres',
+    //   dbConnectionString: 'localhost:5432/postgres',
+    //   dbUser: 'postgres',
+    //   dbPass: 'postgres'
+    // },
     {
-      name: 'Oracle DB connection',
-      database: 'Oracle',
-      client: 'oracledb',
-      dbConnectionString: 'localhost/orcl',
-      dbUser: 'C##john',
-      dbPass: 'john'
-    },
-    {
-      name: 'PostgreSQL connection',
-      database: 'Postgres',
-      client: 'pg',
-      dbName: 'postgres',
-      dbConnectionString: 'localhost:5432/postgres',
-      dbUser: 'postgres',
-      dbPass: 'postgres'
-    },
-    {
-      name: 'Oracle DB non-container',
+      name: 'Oracle connection',
       database: 'Oracle',
       client: 'oracledb',
       dbConnectionString: 'localhost/john',
@@ -177,118 +185,133 @@ export default {
   defaultSchemaIndex: 0,
   schemas: [
     {
-      name: 'First Schema',
+      name: 'Test schema',
       type: 'Oracle',
-      multiplicator: 1,
+      multiplicator: '1',
       connection: {
         name: 'Oracle DB non-container',
         client: 'oracledb',
-        user: 'test_user',
-        password: 'test_user',
-        connectString: 'localhost/john',
+        dbUser: 'test_user',
+        dbPass: 'test_user',
+        dbConnectionString: 'localhost/john',
         database: 'Oracle'
       },
       tables: [
         {
           name: 'Address',
-          multiplicator: 1,
+          multiplicator: '1',
           refs: [],
           fields: [
             {
               pk: true,
               name: 'addressId',
               dbDataType: 'NUMBER(19,0)',
-              generateType: 'pk'
+              generateType: 'pk',
+              generateTypeDescription: 'Primary key'
             },
             {
               name: 'country',
               dbDataType: 'VARCHAR2(255 CHAR)',
-              generateType: 'address.country'
+              generateType: 'address.country',
+              generateTypeDescription: 'Address-Country'
             },
             {
               name: 'countryAbbr',
               dbDataType: 'VARCHAR2(5 CHAR)',
-              generateType: 'address.countryCode'
+              generateType: 'address.countryCode',
+              generateTypeDescription: 'Address-CountryCode'
             },
             {
               name: 'city',
               dbDataType: 'VARCHAR2(255 CHAR)',
-              generateType: 'address.city'
+              generateType: 'address.city',
+              generateTypeDescription: 'Address-city'
             },
             {
               name: 'streetAddress',
               dbDataType: 'VARCHAR2(255 CHAR)',
-              generateType: 'address.streetAddress'
+              generateType: 'address.streetAddress',
+              generateTypeDescription: 'Address-StreetAddress'
             },
             {
               name: 'zipCode',
               dbDataType: 'VARCHAR2(15 CHAR)',
-              generateType: 'address.zipCode'
+              generateType: 'address.zipCode',
+              generateTypeDescription: 'Address-ZipCode'
             }
           ]
         },
         {
           name: 'Product',
-          multiplicator: 1,
+          multiplicator: '10',
           refs: ['Address'],
           fields: [
             {
               pk: true,
               name: 'productId',
               dbDataType: 'NUMBER(19,0)',
-              generateType: 'pk'
+              generateType: 'pk',
+              generateTypeDescription: 'Primary key'
             },
             {
               fk: true,
               name: 'prodWarehoueseAddressId',
               dbDataType: 'NUMBER(19,0)',
               generateType: 'fk',
+              generateTypeDescription: 'Foreign key',
               refTable: 'Address',
               refField: 'addressId'
             },
             {
               name: 'prodName',
               dbDataType: 'VARCHAR2(255 CHAR)',
-              generateType: 'commerce.productName'
+              generateType: 'commerce.productName',
+              generateTypeDescription: 'Commerce-ProductName'
             },
             {
               name: 'prodCategory',
               dbDataType: 'VARCHAR2(255 CHAR)',
-              generateType: 'commerce.product'
+              generateType: 'commerce.product',
+              generateTypeDescription: 'Commerce-Product'
             },
             {
               name: 'basePrice',
               dbDataType: 'NUMBER(9,2)',
-              generateType: 'commerce.price'
+              generateType: 'commerce.price',
+              generateTypeDescription: 'Commerce-Price'
             }
           ]
         },
         {
           name: 'Customers',
-          multiplicator: 1,
+          multiplicator: '10',
           refs: ['Address'],
           fields: [
             {
               pk: true,
               name: 'custId',
               dbDataType: 'NUMBER(19,0)',
-              generateType: 'pk'
+              generateType: 'pk',
+              generateTypeDescription: 'Primary key'
             },
             {
               name: 'custName',
               dbDataType: 'VARCHAR2(255 CHAR)',
-              generateType: 'name.findName'
+              generateType: 'name.findName',
+              generateTypeDescription: 'Name-FindName'
             },
             {
               name: 'custCategory',
               dbDataType: 'VARCHAR2(255 CHAR)',
-              generateType: 'name.title'
+              generateType: 'commerce.department',
+              generateTypeDescription: 'Commerce-Department'
             },
             {
               fk: true,
               name: 'custAddressId',
               dbDataType: 'NUMBER(19,0)',
               generateType: 'fk',
+              generateTypeDescription: 'Foreign key',
               refTable: 'Address',
               refField: 'addressId'
             }
@@ -303,30 +326,35 @@ export default {
               pk: true,
               name: 'purchId',
               dbDataType: 'NUMBER(19 , 0)',
-              generateType: 'pk'
+              generateType: 'pk',
+              generateTypeDescription: 'Primary key'
             },
             {
               fk: true,
               name: 'custId',
               dbDataType: 'NUMBER(19 , 0)',
               generateType: 'fk',
+              generateTypeDescription: 'Foreign key',
               refTable: 'Customers',
               refField: 'custId'
             },
             {
               name: 'custName',
               dbDataType: 'VARCHAR2(255 CHAR)',
-              generateType: 'name.findName'
+              generateType: 'name.findName',
+              generateTypeDescription: 'Name-FindName'
             },
             {
               name: 'purchDate',
               dbDataType: 'TIMESTAMP(7)',
-              generateType: 'date.past'
+              generateType: 'date.past',
+              generateTypeDescription: 'Date-Past'
             },
             {
               name: 'custType',
               dbDataType: 'VARCHAR2(255 CHAR)',
-              generateType: 'name.title'
+              generateType: 'commerce.department',
+              generateTypeDescription: 'Commerce-Department'
             }
           ]
         },
@@ -339,13 +367,15 @@ export default {
               pk: true,
               name: 'purchLineId',
               dbDataType: 'NUMBER(19,0)',
-              generateType: 'pk'
+              generateType: 'pk',
+              generateTypeDescription: 'Primary key'
             },
             {
               fk: true,
               name: 'purchId',
               dbDataType: 'NUMBER(19,0)',
               generateType: 'fk',
+              generateTypeDescription: 'Foreign key',
               refTable: 'PurchTable',
               refField: 'purchId'
             },
@@ -354,395 +384,400 @@ export default {
               name: 'prodId',
               dbDataType: 'NUMBER(19,0)',
               generateType: 'fk',
+              generateTypeDescription: 'Foreign key',
               refTable: 'Product',
               refField: 'productId'
             },
             {
               name: 'prodName',
               dbDataType: 'VARCHAR2(255 CHAR)',
-              generateType: 'commerce.productName'
-            },
-            {
-              name: 'qty',
-              dbDataType: 'NUMBER(6,0)',
-              generateType: 'commerce.price'
-            },
-            {
-              name: 'price',
-              dbDataType: 'NUMBER(9,2)',
-              generateType: 'commerce.price'
-            }
-          ]
-        }
-      ]
-    },
-    {
-      name: 'Second Schema',
-      type: 'Oracle',
-      multiplicator: 1,
-      connection: {},
-      tables: [
-        {
-          name: 'PurchLine',
-          multiplicator: 0,
-          refs: [],
-          fields: [
-            {
-              pk: true,
-              name: 'purchLineId',
-              dbDataType: 'NUMBER(19,0)',
-              generateType: ''
-            },
-            {
-              fk: true,
-              name: 'purchId',
-              dbDataType: 'NUMBER(19,0)',
-              generateType: '',
-              refTable: 'PurchTable',
-              refField: 'purchId'
-            },
-            {
-              name: 'prodName',
-              dbDataType: 'VARCHAR2(255 CHAR)',
-              generateType: ''
-            },
-            {
-              name: 'qty',
-              dbDataType: 'NUMBER(6,0)',
-              generateType: ''
-            },
-            {
-              name: 'price',
-              dbDataType: 'NUMBER(9,2)',
-              generateType: ''
-            }
-          ]
-        }
-      ]
-    },
-    {
-      name: 'New schema',
-      type: 'Oracle',
-      connection: {
-        name: 'Oracle DB non-container',
-        client: 'oracledb',
-        user: 'test_user',
-        password: 'test_user',
-        connectString: 'localhost/john',
-        database: 'Oracle'
-      },
-      tables: [
-        {
-          order: 0,
-          name: 'Customers',
-          multiplicator: 1,
-          refs: [],
-          fields: [
-            {
-              name: 'customerId',
-              dbDataType: 'NUMBER (19 , 0) ',
-              generateType: 'pk',
-              refTable: '',
-              refField: '',
-              fk: false,
-              pk: true
-            },
-            {
-              name: 'custName',
-              dbDataType: 'VARCHAR2(50 CHAR)',
-              generateType: 'name.findName',
-              fk: false
-            },
-            {
-              name: 'contactLastName',
-              dbDataType: 'VARCHAR2(30 CHAR)',
-              generateType: 'lorem.word',
-              fk: false
-            },
-            {
-              name: 'contactFirstName',
-              dbDataType: 'VARCHAR2(30 CHAR)',
-              generateType: 'lorem.word',
-              fk: false
-            },
-            {
-              name: 'phone',
-              dbDataType: 'VARCHAR2(20 CHAR)',
-              generateType: 'phone.phoneNumber',
-              fk: false
-            },
-            {
-              name: 'address',
-              dbDataType: 'VARCHAR2(50 CHAR)',
-              generateType: 'address.streetAddress',
-              fk: false
-            },
-            {
-              name: 'city',
-              dbDataType: 'VARCHAR2(100 CHAR)',
-              generateType: 'address.city',
-              fk: false
-            },
-            {
-              name: 'state',
-              dbDataType: 'VARCHAR2(100 CHAR)',
-              generateType: 'address.county',
-              fk: false
-            },
-            {
-              name: 'postalCode',
-              dbDataType: 'VARCHAR2(20 CHAR)',
-              generateType: 'address.zipCode',
-              fk: false
-            },
-            {
-              name: 'country',
-              dbDataType: 'VARCHAR2(50 CHAR)',
-              generateType: 'address.country',
-              fk: false
-            },
-            {
-              name: 'creditLimit',
-              dbDataType: 'NUMBER (19 , 2)',
-              generateType: 'commerce.price',
-              fk: false
-            }
-          ]
-        },
-        {
-          order: 0,
-          multiplicator: '2',
-          name: 'Payments',
-          refs: ['Customers'],
-          fields: [
-            {
-              name: 'paymentId',
-              dbDataType: 'NUMBER (19 , 0) ',
-              generateType: '',
-              fk: false,
-              pk: true
-            },
-            {
-              name: 'custId',
-              dbDataType: 'NUMBER (19 , 0) ',
-              generateType: 'fk',
-              refTable: 'Customers',
-              refField: 'customerId',
-              fk: true
-            },
-            {
-              name: 'paymentDate',
-              dbDataType: 'TIMESTAMP (7)',
-              generateType: 'date.past',
-              fk: false
-            },
-            {
-              name: 'amount',
-              dbDataType: 'NUMBER (19 , 2) ',
-              generateType: 'commerce.price',
-              fk: false
-            }
-          ]
-        },
-        {
-          order: 0,
-          multiplicator: '2',
-          name: 'Orders',
-          refs: ['Customers'],
-          fields: [
-            {
-              name: 'orderId',
-              dbDataType: 'NUMBER (19 , 0) ',
-              generateType: '',
-              refTable: '',
-              refField: '',
-              fk: false,
-              pk: true
-            },
-            {
-              name: 'orderDate',
-              dbDataType: 'TIMESTAMP (7)',
-              generateType: 'date.past',
-              refTable: '',
-              refField: '',
-              fk: false
-            },
-            {
-              name: 'requiredDate',
-              dbDataType: 'TIMESTAMP (7)',
-              generateType: 'date.past',
-              refTable: '',
-              refField: '',
-              fk: false
-            },
-            {
-              name: 'shippedDate',
-              dbDataType: 'TIMESTAMP (7)',
-              generateType: 'date.past',
-              refTable: '',
-              refField: '',
-              fk: false
-            },
-            {
-              name: 'status',
-              dbDataType: 'VARCHAR2(50 CHAR)',
-              generateType: 'lorem.word',
-              refTable: '',
-              refField: '',
-              fk: false
-            },
-            {
-              name: 'comments',
-              dbDataType: 'VARCHAR2(250 CHAR)',
-              generateType: 'lorem.words',
-              refTable: '',
-              refField: '',
-              fk: false
-            },
-            {
-              name: 'custId',
-              dbDataType: 'NUMBER  (19 , 0) ',
-              generateType: 'fk',
-              refTable: 'Customers',
-              refField: 'customerId',
-              fk: true
-            }
-          ]
-        },
-        {
-          order: 0,
-          name: 'Products',
-          multiplicator: 1,
-          refs: [],
-          fields: [
-            {
-              name: 'prodId',
-              dbDataType: 'NUMBER (19 ,0) ',
-              generateType: '',
-              fk: false,
-              pk: true
-            },
-            {
-              name: 'prodName',
-              dbDataType: 'VARCHAR2(50 CHAR)',
               generateType: 'commerce.productName',
-              fk: false
-            },
-            {
-              name: 'prodVendor',
-              dbDataType: 'VARCHAR2(50 CHAR)',
-              generateType: 'company.companyName',
-              fk: false
-            },
-            {
-              name: 'prodDescription',
-              dbDataType: 'VARCHAR2(100 CHAR)',
-              generateType: 'lorem.sentence',
-              fk: false
-            },
-            {
-              name: 'quantityInStock',
-              dbDataType: 'NUMBER (19 , 0) ',
-              generateType: 'commerce.price',
-              fk: false
-            },
-            {
-              name: 'price',
-              dbDataType: 'NUMBER (19, 2) ',
-              generateType: 'commerce.price',
-              fk: false
-            }
-          ]
-        },
-        {
-          order: 0,
-          multiplicator: '5',
-          name: 'ProdLines',
-          refs: ['Products'],
-          fields: [
-            {
-              name: 'prodLineId',
-              dbDataType: 'NUMBER (19, 0) ',
-              generateType: '',
-              fk: false,
-              pk: true
-            },
-            {
-              name: 'description',
-              dbDataType: 'VARCHAR2(100 CHAR)',
-              generateType: 'lorem.word',
-              fk: false
-            },
-            {
-              name: 'image',
-              dbDataType: 'VARCHAR2(100 CHAR)',
-              generateType: 'internet.avatar',
-              fk: false
-            },
-            {
-              name: 'prodId',
-              dbDataType: 'NUMBER (19 , 0) ',
-              generateType: 'fk',
-              refTable: 'Products',
-              refField: 'prodId',
-              fk: true
-            }
-          ]
-        },
-        {
-          order: 0,
-          multiplicator: '5',
-          name: 'OrderDetails',
-          refs: ['Products', 'Orders'],
-          fields: [
-            {
-              name: 'orderDetailsId',
-              dbDataType: 'NUMBER (19 ,0) ',
-              generateType: '',
-              refTable: '',
-              refField: '',
-              fk: false,
-              pk: true
-            },
-            {
-              name: 'prodId',
-              dbDataType: 'NUMBER  (19 , 0) ',
-              generateType: 'fk',
-              refTable: 'Products',
-              refField: 'prodId',
-              fk: true
-            },
-            {
-              name: 'orderId',
-              dbDataType: 'NUMBER (19 , 0) ',
-              generateType: 'fk',
-              refTable: 'Orders',
-              refField: 'orderId',
-              fk: true
+              generateTypeDescription: 'Commerce-ProductName'
             },
             {
               name: 'qty',
-              dbDataType: 'NUMBER (19,0) ',
+              dbDataType: 'NUMBER(6,0)',
               generateType: 'commerce.price',
-              refTable: '',
-              refField: '',
-              fk: false
+              generateTypeDescription: 'Commerce-Price'
             },
             {
               name: 'price',
-              dbDataType: 'NUMBER (19, 2)',
+              dbDataType: 'NUMBER(9,2)',
               generateType: 'commerce.price',
-              refTable: '',
-              refField: '',
-              fk: false
+              generateTypeDescription: 'Commerce-Price'
             }
           ]
         }
-      ],
-      multiplicator: '1'
+      ]
     },
+    //
+    // {
+    //   name: 'Second Schema',
+    //   type: 'Oracle',
+    //   multiplicator: 1,
+    //   connection: {},
+    //   tables: [
+    //     {
+    //       name: 'PurchLine',
+    //       multiplicator: 0,
+    //       refs: [],
+    //       fields: [
+    //         {
+    //           pk: true,
+    //           name: 'purchLineId',
+    //           dbDataType: 'NUMBER(19,0)',
+    //           generateType: ''
+    //         },
+    //         {
+    //           fk: true,
+    //           name: 'purchId',
+    //           dbDataType: 'NUMBER(19,0)',
+    //           generateType: '',
+    //           refTable: 'PurchTable',
+    //           refField: 'purchId'
+    //         },
+    //         {
+    //           name: 'prodName',
+    //           dbDataType: 'VARCHAR2(255 CHAR)',
+    //           generateType: ''
+    //         },
+    //         {
+    //           name: 'qty',
+    //           dbDataType: 'NUMBER(6,0)',
+    //           generateType: ''
+    //         },
+    //         {
+    //           name: 'price',
+    //           dbDataType: 'NUMBER(9,2)',
+    //           generateType: ''
+    //         }
+    //       ]
+    //     }
+    //   ]
+    // },
+    // {
+    //   name: 'New schema',
+    //   type: 'Oracle',
+    //   connection: {
+    //     name: 'Oracle DB non-container',
+    //     client: 'oracledb',
+    //     dbUser: 'test_user',
+    //     dbPass: 'test_user',
+    //     dbConnectionString: 'localhost/john',
+    //     database: 'Oracle'
+    //   },
+    //   tables: [
+    //     {
+    //       order: 0,
+    //       name: 'Customers',
+    //       multiplicator: 1,
+    //       refs: [],
+    //       fields: [
+    //         {
+    //           name: 'customerId',
+    //           dbDataType: 'NUMBER (19 , 0) ',
+    //           generateType: 'pk',
+    //           refTable: '',
+    //           refField: '',
+    //           fk: false,
+    //           pk: true
+    //         },
+    //         {
+    //           name: 'custName',
+    //           dbDataType: 'VARCHAR2(50 CHAR)',
+    //           generateType: 'name.findName',
+    //           fk: false
+    //         },
+    //         {
+    //           name: 'contactLastName',
+    //           dbDataType: 'VARCHAR2(30 CHAR)',
+    //           generateType: 'lorem.word',
+    //           fk: false
+    //         },
+    //         {
+    //           name: 'contactFirstName',
+    //           dbDataType: 'VARCHAR2(30 CHAR)',
+    //           generateType: 'lorem.word',
+    //           fk: false
+    //         },
+    //         {
+    //           name: 'phone',
+    //           dbDataType: 'VARCHAR2(20 CHAR)',
+    //           generateType: 'phone.phoneNumber',
+    //           fk: false
+    //         },
+    //         {
+    //           name: 'address',
+    //           dbDataType: 'VARCHAR2(50 CHAR)',
+    //           generateType: 'address.streetAddress',
+    //           fk: false
+    //         },
+    //         {
+    //           name: 'city',
+    //           dbDataType: 'VARCHAR2(100 CHAR)',
+    //           generateType: 'address.city',
+    //           fk: false
+    //         },
+    //         {
+    //           name: 'state',
+    //           dbDataType: 'VARCHAR2(100 CHAR)',
+    //           generateType: 'address.county',
+    //           fk: false
+    //         },
+    //         {
+    //           name: 'postalCode',
+    //           dbDataType: 'VARCHAR2(20 CHAR)',
+    //           generateType: 'address.zipCode',
+    //           fk: false
+    //         },
+    //         {
+    //           name: 'country',
+    //           dbDataType: 'VARCHAR2(50 CHAR)',
+    //           generateType: 'address.country',
+    //           fk: false
+    //         },
+    //         {
+    //           name: 'creditLimit',
+    //           dbDataType: 'NUMBER (19 , 2)',
+    //           generateType: 'commerce.price',
+    //           fk: false
+    //         }
+    //       ]
+    //     },
+    //     {
+    //       order: 0,
+    //       multiplicator: '2',
+    //       name: 'Payments',
+    //       refs: ['Customers'],
+    //       fields: [
+    //         {
+    //           name: 'paymentId',
+    //           dbDataType: 'NUMBER (19 , 0) ',
+    //           generateType: '',
+    //           fk: false,
+    //           pk: true
+    //         },
+    //         {
+    //           name: 'custId',
+    //           dbDataType: 'NUMBER (19 , 0) ',
+    //           generateType: 'fk',
+    //           refTable: 'Customers',
+    //           refField: 'customerId',
+    //           fk: true
+    //         },
+    //         {
+    //           name: 'paymentDate',
+    //           dbDataType: 'TIMESTAMP (7)',
+    //           generateType: 'date.past',
+    //           fk: false
+    //         },
+    //         {
+    //           name: 'amount',
+    //           dbDataType: 'NUMBER (19 , 2) ',
+    //           generateType: 'commerce.price',
+    //           fk: false
+    //         }
+    //       ]
+    //     },
+    //     {
+    //       order: 0,
+    //       multiplicator: '2',
+    //       name: 'Orders',
+    //       refs: ['Customers'],
+    //       fields: [
+    //         {
+    //           name: 'orderId',
+    //           dbDataType: 'NUMBER (19 , 0) ',
+    //           generateType: '',
+    //           refTable: '',
+    //           refField: '',
+    //           fk: false,
+    //           pk: true
+    //         },
+    //         {
+    //           name: 'orderDate',
+    //           dbDataType: 'TIMESTAMP (7)',
+    //           generateType: 'date.past',
+    //           refTable: '',
+    //           refField: '',
+    //           fk: false
+    //         },
+    //         {
+    //           name: 'requiredDate',
+    //           dbDataType: 'TIMESTAMP (7)',
+    //           generateType: 'date.past',
+    //           refTable: '',
+    //           refField: '',
+    //           fk: false
+    //         },
+    //         {
+    //           name: 'shippedDate',
+    //           dbDataType: 'TIMESTAMP (7)',
+    //           generateType: 'date.past',
+    //           refTable: '',
+    //           refField: '',
+    //           fk: false
+    //         },
+    //         {
+    //           name: 'status',
+    //           dbDataType: 'VARCHAR2(50 CHAR)',
+    //           generateType: 'lorem.word',
+    //           refTable: '',
+    //           refField: '',
+    //           fk: false
+    //         },
+    //         {
+    //           name: 'comments',
+    //           dbDataType: 'VARCHAR2(250 CHAR)',
+    //           generateType: 'lorem.words',
+    //           refTable: '',
+    //           refField: '',
+    //           fk: false
+    //         },
+    //         {
+    //           name: 'custId',
+    //           dbDataType: 'NUMBER  (19 , 0) ',
+    //           generateType: 'fk',
+    //           refTable: 'Customers',
+    //           refField: 'customerId',
+    //           fk: true
+    //         }
+    //       ]
+    //     },
+    //     {
+    //       order: 0,
+    //       name: 'Products',
+    //       multiplicator: 1,
+    //       refs: [],
+    //       fields: [
+    //         {
+    //           name: 'prodId',
+    //           dbDataType: 'NUMBER (19 ,0) ',
+    //           generateType: '',
+    //           fk: false,
+    //           pk: true
+    //         },
+    //         {
+    //           name: 'prodName',
+    //           dbDataType: 'VARCHAR2(50 CHAR)',
+    //           generateType: 'commerce.productName',
+    //           fk: false
+    //         },
+    //         {
+    //           name: 'prodVendor',
+    //           dbDataType: 'VARCHAR2(50 CHAR)',
+    //           generateType: 'company.companyName',
+    //           fk: false
+    //         },
+    //         {
+    //           name: 'prodDescription',
+    //           dbDataType: 'VARCHAR2(100 CHAR)',
+    //           generateType: 'lorem.sentence',
+    //           fk: false
+    //         },
+    //         {
+    //           name: 'quantityInStock',
+    //           dbDataType: 'NUMBER (19 , 0) ',
+    //           generateType: 'commerce.price',
+    //           fk: false
+    //         },
+    //         {
+    //           name: 'price',
+    //           dbDataType: 'NUMBER (19, 2) ',
+    //           generateType: 'commerce.price',
+    //           fk: false
+    //         }
+    //       ]
+    //     },
+    //     {
+    //       order: 0,
+    //       multiplicator: '5',
+    //       name: 'ProdLines',
+    //       refs: ['Products'],
+    //       fields: [
+    //         {
+    //           name: 'prodLineId',
+    //           dbDataType: 'NUMBER (19, 0) ',
+    //           generateType: '',
+    //           fk: false,
+    //           pk: true
+    //         },
+    //         {
+    //           name: 'description',
+    //           dbDataType: 'VARCHAR2(100 CHAR)',
+    //           generateType: 'lorem.word',
+    //           fk: false
+    //         },
+    //         {
+    //           name: 'image',
+    //           dbDataType: 'VARCHAR2(100 CHAR)',
+    //           generateType: 'internet.avatar',
+    //           fk: false
+    //         },
+    //         {
+    //           name: 'prodId',
+    //           dbDataType: 'NUMBER (19 , 0) ',
+    //           generateType: 'fk',
+    //           refTable: 'Products',
+    //           refField: 'prodId',
+    //           fk: true
+    //         }
+    //       ]
+    //     },
+    //     {
+    //       order: 0,
+    //       multiplicator: '5',
+    //       name: 'OrderDetails',
+    //       refs: ['Products', 'Orders'],
+    //       fields: [
+    //         {
+    //           name: 'orderDetailsId',
+    //           dbDataType: 'NUMBER (19 ,0) ',
+    //           generateType: '',
+    //           refTable: '',
+    //           refField: '',
+    //           fk: false,
+    //           pk: true
+    //         },
+    //         {
+    //           name: 'prodId',
+    //           dbDataType: 'NUMBER  (19 , 0) ',
+    //           generateType: 'fk',
+    //           refTable: 'Products',
+    //           refField: 'prodId',
+    //           fk: true
+    //         },
+    //         {
+    //           name: 'orderId',
+    //           dbDataType: 'NUMBER (19 , 0) ',
+    //           generateType: 'fk',
+    //           refTable: 'Orders',
+    //           refField: 'orderId',
+    //           fk: true
+    //         },
+    //         {
+    //           name: 'qty',
+    //           dbDataType: 'NUMBER (19,0) ',
+    //           generateType: 'commerce.price',
+    //           refTable: '',
+    //           refField: '',
+    //           fk: false
+    //         },
+    //         {
+    //           name: 'price',
+    //           dbDataType: 'NUMBER (19, 2)',
+    //           generateType: 'commerce.price',
+    //           refTable: '',
+    //           refField: '',
+    //           fk: false
+    //         }
+    //       ]
+    //     }
+    //   ],
+    //   multiplicator: '1'
+    // },
     {
-      name: 'Newly',
+      name: 'New Test schema',
       type: 'Oracle',
       connection: {},
       tables: [
@@ -756,6 +791,7 @@ export default {
               name: 'ArtistId',
               dbDataType: 'NUMBER(15)',
               generateType: 'pk',
+              generateTypeDescription: 'Primary key',
               refTable: '',
               refField: '',
               fk: false,
@@ -765,6 +801,7 @@ export default {
               name: 'ArtistName',
               dbDataType: 'VARCHAR2(50)',
               generateType: '',
+              generateTypeDescription: '',
               refTable: '',
               refField: '',
               fk: false
@@ -781,6 +818,7 @@ export default {
               name: 'GenreId',
               dbDataType: 'NUMBER(15)',
               generateType: 'pk',
+              generateTypeDescription: 'Primary key',
               refTable: '',
               refField: '',
               fk: false,
@@ -790,6 +828,7 @@ export default {
               name: 'Genre',
               dbDataType: 'VARCHAR2(50)',
               generateType: '',
+              generateTypeDescription: '',
               refTable: '',
               refField: '',
               fk: false
@@ -806,6 +845,7 @@ export default {
               name: 'AlbumId',
               dbDataType: 'NUMBER(15)',
               generateType: 'pk',
+              generateTypeDescription: 'Primary key',
               refTable: '',
               refField: '',
               fk: false,
@@ -815,6 +855,7 @@ export default {
               name: 'ArtistId',
               dbDataType: 'NUMBER(15)',
               generateType: 'fk',
+              generateTypeDescription: 'Foreign key',
               refTable: 'ARTISTS',
               refField: 'ArtistId',
               fk: true
@@ -823,6 +864,7 @@ export default {
               name: 'GenreId',
               dbDataType: 'NUMBER(15)',
               generateType: 'fk',
+              generateTypeDescription: 'Foreign key',
               refTable: 'GENRE',
               refField: 'GenreId',
               fk: true
@@ -831,6 +873,7 @@ export default {
               name: 'AlbumName',
               dbDataType: 'VARCHAR2(50)',
               generateType: '',
+              generateTypeDescription: '',
               refTable: '',
               refField: '',
               fk: false
@@ -839,6 +882,7 @@ export default {
               name: 'DateRelease',
               dbDataType: 'DATE',
               generateType: '',
+              generateTypeDescription: '',
               refTable: '',
               refField: '',
               fk: false

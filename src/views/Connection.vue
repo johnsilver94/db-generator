@@ -31,7 +31,7 @@
                   <v-text-field
                     v-model="currentConnection.dbName"
                     :rules="connectionRules.dbName"
-                    v-if="currentConnection.client == 'pg'"
+                    v-if="currentConnection.database == 'Postgres'"
                     label="Database"
                     class="purple-input"
                   />
@@ -142,7 +142,7 @@
                   </v-tooltip>
                 </div>
               </v-list-tile>
-              <v-divider/>
+              <v-divider />
             </v-list>
           </v-tabs-items>
         </material-card>
