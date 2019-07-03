@@ -31,7 +31,7 @@
                   <v-text-field
                     v-model="currentConnection.dbName"
                     :rules="connectionRules.dbName"
-                    v-if="currentConnection.client == 'pg'"
+                    v-if="currentConnection.database == 'Postgres'"
                     label="Database"
                     class="purple-input"
                   />
@@ -142,7 +142,7 @@
                   </v-tooltip>
                 </div>
               </v-list-tile>
-              <v-divider/>
+              <v-divider />
             </v-list>
           </v-tabs-items>
         </material-card>
@@ -173,7 +173,6 @@ export default {
     return {
       //Connection Form
       showPassword: false,
-      currentConnection: {},
       defaultConnection: {
         name: "",
         database: "",
@@ -210,7 +209,8 @@ export default {
       currentNotification: "getCurrentNotification",
       connections: "getConnections",
       databasesNames: "getDatabasesNames",
-      databasesClients: "getDatabasesClients"
+      databasesClients: "getDatabasesClients",
+      currentConnection: "getCurrentConnection"
     })
   },
   methods: {
@@ -219,8 +219,13 @@ export default {
       delete: "deleteConnection",
       test: "testConnection"
     }),
+    ...mapActions("statistics", {
+      setConnectionsPieData: "setConnectionsPieData",
+      incrementErrors: "incrementErrors"
+    }),
     ...mapMutations("app", {
-      setCurrentNotification: "setCurrentNotification"
+      setCurrentNotification: "setCurrentNotification",
+      setCurrentConnection: "setCurrentConnection"
     }),
     validateConnectionForm() {
       return this.$refs.connectionForm.validate();
@@ -264,9 +269,7 @@ export default {
             }`;
             notification.type = "error";
 
-            console.log(notification);
-            console.log(error.response.data);
-
+            this.incrementErrors();
             this.setCurrentNotification(notification);
             this.showNotification();
           });
@@ -280,23 +283,25 @@ export default {
         );
 
         this.save(this.currentConnection);
+        this.setConnectionsPieData(this.connections);
 
         this.showNotification();
-        this.currentConnection = {};
+        this.setCurrentConnection({});
         this.resetValidationConnectionForm();
       }
     },
     editConnection(index) {
-      this.currentConnection = Object.assign({}, this.connections[index]);
+      this.setCurrentConnection(Object.assign({}, this.connections[index]));
     },
     deleteConnection(index) {
       if (confirm("Are you sure you want to delete this Connection?")) {
         this.delete(index);
         this.showNotification();
+        this.setConnectionsPieData(this.connections);
       }
     },
     cancelConnection() {
-      this.currentConnection = {};
+      this.setCurrentConnection({});
       this.resetValidationConnectionForm();
     },
     showNotification() {

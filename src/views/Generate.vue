@@ -143,7 +143,7 @@
 </template>
 
 <script>
-import { mapGetters, mapMutations } from "vuex";
+import { mapGetters, mapMutations, mapActions } from "vuex";
 import axios from "axios";
 
 export default {
@@ -253,7 +253,7 @@ export default {
         "Finance-Iban",
         "Finance-Bic",
         "Helpers-CreateCard",
-        "helpers-ContextualCard",
+        "Helpers-ContextualCard",
         "Helpers-UserCard",
         "Helpers-CreateTransaction",
         "Internet-Avatar",
@@ -325,7 +325,6 @@ export default {
   },
   computed: {
     ...mapGetters("app", {
-      statistics: "getStatistics",
       schemas: "getSchemas",
       connections: "getConnections",
       notifications: "getNotifications",
@@ -363,6 +362,10 @@ export default {
     this.editSchema = Object.assign({}, this.schema);
   },
   methods: {
+    ...mapActions("statistics", {
+      setGeneratedHBarData: "setGeneratedHBarData",
+      incrementErrors: "incrementErrors"
+    }),
     validateSchemasForm() {
       return this.$refs.schemasForm.validate();
     },
@@ -384,8 +387,6 @@ export default {
           return connection.name === name;
         })
       );
-
-      console.log(this.editSchema.connection);
     },
     generateSchema() {
       if (!this.validateSchemasForm()) {
@@ -415,6 +416,7 @@ export default {
               }`,
               type: "error"
             };
+            this.incrementErrors();
             this.showNotification(notification);
           });
       }
@@ -440,6 +442,7 @@ export default {
               };
 
               this.showNotification(notification);
+              this.setGeneratedHBarData(this.editSchema);
             }
           })
           .catch(error => {
@@ -449,6 +452,7 @@ export default {
               }`,
               type: "error"
             };
+            this.incrementErrors();
             this.showNotification(notification);
           });
       }
@@ -465,8 +469,6 @@ export default {
         field.generateTypeDescription
       );
       field.generateType = this.generateDataTypes[index];
-
-      console.log(field);
     }
   }
 };

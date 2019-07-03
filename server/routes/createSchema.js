@@ -1,5 +1,9 @@
+/* eslint-disable curly */
+/* eslint-disable indent */
+/* eslint-disable no-undef */
+/* eslint-disable space-before-function-paren */
 const express = require('express');
-const config = require('../config');
+// const config = require('../config');
 const router = express.Router();
 // createt database schema
 router.post('/', async (req, res) => {
@@ -17,8 +21,10 @@ router.post('/', async (req, res) => {
     var table = schema.tables[i];
     await knex.schema
       .raw(
-  `BEGIN 
-      EXECUTE IMMEDIATE 'DROP TABLE ' || '"${table.name}"' || ' CASCADE CONSTRAINTS PURGE'; 
+        `BEGIN 
+      EXECUTE IMMEDIATE 'DROP TABLE ' || '"${
+        table.name
+      }"' || ' CASCADE CONSTRAINTS PURGE'; 
   EXCEPTION 
     WHEN OTHERS THEN
     IF SQLCODE != -942 THEN 

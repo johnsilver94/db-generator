@@ -1,14 +1,17 @@
+/* eslint-disable eqeqeq */
+/* eslint-disable curly */
+/* eslint-disable space-before-function-paren */
 const express = require('express');
 
 const router = express.Router();
 
-const config = require('../config');
+// const config = require('../config');
 
 const faker = require('faker');
 
 faker.locale = 'en';
 
-//Generate rows
+// Generate rows
 router.post('/', async (req, res) => {
   const schema = req.body;
   const baseMultiplicator = schema.multiplicator;
@@ -22,29 +25,32 @@ router.post('/', async (req, res) => {
       connectString: schema.connection.dbConnectionString
     }
   });
-  //Multiplicator
+  // Multiplicator
   try {
     for (var i = 1; i <= baseMultiplicator; i++) {
       var keys = {};
 
-      //Tables
+      // Tables
       for (var j = 0; j < schema.tables.length; j++) {
         var rows = [];
         var multiplicator = 1;
         var table = schema.tables[j];
         keys[table.name] = [];
+        // console.log(table.name);
 
         if (table.refs.length) {
           multiplicator = tableMultiplicator(table.name);
+          // console.log(multiplicator);
         } else {
           multiplicator = table.multiplicator;
+          // console.log(multiplicator);
         }
 
-        //Rows
+        // Rows
         for (var k = 1; k <= multiplicator; k++) {
           var row = {};
 
-          //Fields
+          // Fields
           for (var l = 0; l < table.fields.length; l++) {
             var field = table.fields[l];
             var fakerFunction = field.generateType.split('.');
@@ -56,8 +62,15 @@ router.post('/', async (req, res) => {
 
               keys[table.name].push(pkId);
             } else if (field.fk) {
-              var curMultiplicator = tableMultiplicator(field.refTable, true);
-              var fk = Math.ceil(k / curMultiplicator) - 1;
+              var precMultiplicator = tableMultiplicator(field.refTable);
+              // console.log(precMultiplicator);
+              precMultiplicator = Math.floor(multiplicator / precMultiplicator);
+
+              // console.log(`----${field.refTable}`);
+              // console.log(precMultiplicator);
+
+              var fk = Math.ceil(k / precMultiplicator) - 1;
+              // console.log(keys[field.refTable][fk]);
 
               row[field.name] = keys[field.refTable][fk];
             } else
@@ -91,25 +104,22 @@ router.post('/', async (req, res) => {
     res.send();
   }
 
-  function tableMultiplicator(tableName, reverse = false) {
+  function tableMultiplicator(tableName) {
     var multiplicator = 1;
-    var ok = true;
+    var table = schema.tables.find(table => {
+      return table.name === tableName;
+    });
 
-    if (reverse) {
-      ok = true;
-      var reverseTables = Object.assign([], schema.tables);
-      reverseTables.reverse();
-      reverseTables.forEach(reverseTable => {
-        if (reverseTable.name == tableName) ok = false;
-        if (ok) multiplicator = multiplicator * reverseTable.multiplicator;
+    multiplicator = multiplicator * table.multiplicator;
+
+    table.refs.forEach(ref => {
+      var refTable = schema.tables.find(table => {
+        return table.name === ref;
       });
-    } else {
-      ok = true;
-      schema.tables.forEach(table => {
-        if (ok) multiplicator = multiplicator * table.multiplicator;
-        if (table.name == tableName) ok = false;
-      });
-    }
+      if (refTable.refs.length)
+        multiplicator = multiplicator * tableMultiplicator(refTable.name);
+      else multiplicator = multiplicator * refTable.multiplicator;
+    });
     return multiplicator;
   }
 });

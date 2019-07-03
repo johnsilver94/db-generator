@@ -18,7 +18,7 @@
                   class="mb-3"
                   :color="notification.type"
                   dismissible
-                  @click="deleteNotification(key)"
+                  @click="deleteNotification(index)"
                 >{{notification.text}}</material-notification>
               </v-flex>
             </v-layout>
@@ -31,7 +31,7 @@
 
 <script>
 export default {
-  data: () => ({}), 
+  data: () => ({}),
   computed: {
     notifications() {
       return this.$store.state.app.notifications;

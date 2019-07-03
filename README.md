@@ -7,7 +7,18 @@ DB Generator is a schema and data generator for Oracle database, featuring:
 - Generate schema.
 - Generate data for the schema.
 
-## Project setup
+ ---
+
+## Quick Start
+
+### First steps
+
+1. Install latest version of Node.js.
+2. Install yarn package manager (recommended).
+3. Download repository(using git or manual)
+4. Open unziped repository in terminal
+
+### Project setup
 
 ```bash
 yarn install
@@ -16,7 +27,9 @@ yarn install
 ### Compiles and hot-reloads for development
 
 ```bash
-yarn serve OR yarn dev
+yarn dev    - launch server + vue app
+yarn server - launch server
+yarn serve  - launch vue app
 ```
 
 ### Compiles and minifies for production
@@ -49,7 +62,7 @@ Semantic Versioning is a 3-component number in the format of X.Y.Z, where :
 
 ![Semantic Versioning](https://cdncontribute.geeksforgeeks.org/wp-content/uploads/semver.png)
 
-### Application versions
+## Roadmap
 
 - Current
   - 1.0.0   -   Vue.js client with Node.js server [Development version]
